@@ -4,7 +4,6 @@ import java.util.Properties;
 
 import org.nutz.lang.Strings;
 
-// TODO: Auto-generated Javadoc
 
 /**
  * 配置信息.

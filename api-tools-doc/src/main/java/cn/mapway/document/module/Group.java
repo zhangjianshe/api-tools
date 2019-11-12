@@ -144,14 +144,14 @@ public class Group implements Serializable {
     public void sort() {
 
         Collections.sort(subGroups, new Comparator<Group>() {
-            @Override
+
             public int compare(Group o1, Group o2) {
                 return o1.order > o2.order ? 1 : -1;
             }
         });
 
         Collections.sort(entries, new Comparator<Entry>() {
-            @Override
+
             public int compare(Entry o1, Entry o2) {
                 return o1.order > o2.order ? 1 : -1;
             }

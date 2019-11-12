@@ -12,7 +12,7 @@ import cn.mapway.document.parser.SpringParser;
 import cn.mapway.document.resource.Template;
 import org.nutz.lang.Strings;
 
-// TODO: Auto-generated Javadoc
+
 
 /**
  * 辅助类.

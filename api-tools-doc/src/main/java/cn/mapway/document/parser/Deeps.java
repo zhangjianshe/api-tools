@@ -2,7 +2,6 @@ package cn.mapway.document.parser;
 
 import java.util.HashMap;
 
-// TODO: Auto-generated Javadoc
 
 /**
  * 接口字段类型深度信息.

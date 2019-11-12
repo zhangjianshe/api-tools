@@ -1,6 +1,5 @@
 package cn.mapway.document.module;
 
-// TODO: Auto-generated Javadoc
 
 /**
  * 记录访问次数.

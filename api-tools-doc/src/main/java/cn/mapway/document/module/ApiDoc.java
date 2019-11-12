@@ -6,7 +6,6 @@ import java.util.List;
 
 import cn.mapway.document.helper.JarInfo;
 
-// TODO: Auto-generated Javadoc
 
 /**
  * ApiDoc V2.

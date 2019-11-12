@@ -2,7 +2,6 @@ package cn.mapway.document.module;
 
 import java.io.Serializable;
 
-// TODO: Auto-generated Javadoc
 
 /**
  * 字段代码值.

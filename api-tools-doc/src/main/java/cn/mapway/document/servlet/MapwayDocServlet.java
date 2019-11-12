@@ -19,7 +19,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Enumeration;
 
@@ -33,45 +32,130 @@ public class MapwayDocServlet extends HttpServlet {
 
 
     /**
+     * 作者.
+     */
+    public final static String PARAM_AUTHOR = "author";
+    /**
+     * 标题.
+     */
+    public final static String PARAM_TITLE = "title";
+    /**
+     * 子标题.
+     */
+    public final static String PARAM_SUB_TITLE = "subtitle";
+    /**
+     * 接口URL基路径.
+     */
+    public final static String PARAM_BASE_PATH = "basePath";
+    /**
+     * 域名.
+     */
+    public final static String PARAM_DOMAIN = "domain";
+    /**
+     * ANT hOME路径.
+     */
+    public final static String PARAM_ANT_HOME = "antHome";
+    /**
+     * 扫描的包名，支持，号隔开多个包名.
+     */
+    public final static String PARAM_SCAN_PACKAGES = "scanPackages";
+    /**
+     * 连接的包名.
+     */
+    public final static String PARAM_CONNECTOR_PACKAGE_NAME = "connectorPackageName";
+    /**
+     * 连接的类名.
+     */
+    public final static String PARAM_CONNECTOR_CLASS_NAME = "connectorClassName";
+    /**
+     * 连接的类名.
+     */
+    public final static String PARAM_COPY_RIGHT = "copyright";
+    /**
+     * 是否允许生成JavaConnector.
+     */
+    public final static String PARAM_ENABLE_JAVA_CONNECTOR = "enableJavaConnector";
+    /**
+     * 是否允许生成GwtConnector.
+     */
+    public final static String PARAM_ENABLE_GWT_CONNECTOR = "enableGwtConnector";
+    /**
+     * 文档API版本.
+     */
+    public final static String PARAM_API_VERSION = "apiVersion";
+    /**
+     * 返回的URL.
+     */
+    public static final String PARAM_HOME_URL = "homeUrl";
+    /**
+     * LOGO base64 data
+     */
+    public static final String PARAM_LOGO_BASE64 = "logoBase64";
+    /**
+     * 样式文件,可以是 网络的文件，也可以直接是 css样式.
+     */
+    public static final String PARAM_CSS_STYLE = "cssStyle";
+    /**
+     * The Constant serialVersionUID.
+     */
+    private static final long serialVersionUID = 1L;
+    /**
      * 日志记录器.
      */
-    private static Log log = Logs.getLog("Mapway-Document");
-
+    private static Log log = Logs.getLog("Mapway-Api-Document");
     /**
      * 文档上下文环境.
      */
     private GenContext context;
-
     /**
      * 需要扫描的包名称.
      */
     private String packageNames;
-
     /**
      * connector 包名.
      */
     private String connectorPackageName;
-
     /**
      * connector 类名.
      */
     private String connectorClassName;
-
     /**
      * 用于编译的ANT HOME.
      */
     private String antHome;
 
     /**
-     * The Constant serialVersionUID.
-     */
-    private static final long serialVersionUID = 1L;
-
-    /**
      * Constructor of the object.
      */
     public MapwayDocServlet() {
         super();
+    }
+
+    /**
+     * Gets the download local.
+     *
+     * @param req the req
+     * @return the download local
+     */
+    private static String getDownloadLocal(HttpServletRequest req) {
+        String root = req.getServletContext().getRealPath("/");
+        String downloadPath = root + "/download/jar";
+        Files.createDirIfNoExists(downloadPath);
+        return downloadPath;
+    }
+
+    /**
+     * Gets the base path.
+     *
+     * @param request the request
+     * @return the base path
+     */
+    public static String getBasePath(HttpServletRequest request) {
+        String path = request.getContextPath();
+        String port = request.getServerPort() == 80 ? "" : (":" + request.getServerPort());
+
+        String basePath = request.getScheme() + "://" + request.getServerName() + port + path + "/";
+        return basePath;
     }
 
     /**
@@ -145,19 +229,6 @@ public class MapwayDocServlet extends HttpServlet {
             byteout(response, data, null);
         }
 
-    }
-
-    /**
-     * Gets the download local.
-     *
-     * @param req the req
-     * @return the download local
-     */
-    private static String getDownloadLocal(HttpServletRequest req) {
-        String root = req.getServletContext().getRealPath("/");
-        String downloadPath = root + "/download/jar";
-        Files.createDirIfNoExists(downloadPath);
-        return downloadPath;
     }
 
     /**
@@ -275,20 +346,6 @@ public class MapwayDocServlet extends HttpServlet {
     }
 
     /**
-     * Gets the base path.
-     *
-     * @param request the request
-     * @return the base path
-     */
-    public static String getBasePath(HttpServletRequest request) {
-        String path = request.getContextPath();
-        String port = request.getServerPort() == 80 ? "" : (":" + request.getServerPort());
-
-        String basePath = request.getScheme() + "://" + request.getServerName() + port + path + "/";
-        return basePath;
-    }
-
-    /**
      * The doPost method of the servlet. <br>
      * <p>
      * This method is called when a form has its tag value method equals to post.
@@ -303,87 +360,6 @@ public class MapwayDocServlet extends HttpServlet {
             throws ServletException, IOException {
         doGet(request, response);
     }
-
-    /**
-     * 作者.
-     */
-    public final static String PARAM_AUTHOR = "author";
-
-    /**
-     * 标题.
-     */
-    public final static String PARAM_TITLE = "title";
-
-    /**
-     * 子标题.
-     */
-    public final static String PARAM_SUB_TITLE = "subtitle";
-
-    /**
-     * 接口URL基路径.
-     */
-    public final static String PARAM_BASE_PATH = "basePath";
-
-    /**
-     * 域名.
-     */
-    public final static String PARAM_DOMAIN = "domain";
-
-    /**
-     * ANT hOME路径.
-     */
-    public final static String PARAM_ANT_HOME = "antHome";
-
-    /**
-     * 扫描的包名，支持，号隔开多个包名.
-     */
-    public final static String PARAM_SCAN_PACKAGES = "scanPackages";
-
-    /**
-     * 连接的包名.
-     */
-    public final static String PARAM_CONNECTOR_PACKAGE_NAME = "connectorPackageName";
-
-    /**
-     * 连接的类名.
-     */
-    public final static String PARAM_CONNECTOR_CLASS_NAME = "connectorClassName";
-
-    /**
-     * 连接的类名.
-     */
-    public final static String PARAM_COPY_RIGHT = "copyright";
-
-    /**
-     * 是否允许生成JavaConnector.
-     */
-    public final static String PARAM_ENABLE_JAVA_CONNECTOR = "enableJavaConnector";
-
-    /**
-     * 是否允许生成GwtConnector.
-     */
-    public final static String PARAM_ENABLE_GWT_CONNECTOR = "enableGwtConnector";
-
-    /**
-     * 文档API版本.
-     */
-    public final static String PARAM_API_VERSION = "apiVersion";
-
-    /**
-     * 返回的URL.
-     */
-    public static final String PARAM_HOME_URL = "homeUrl";
-
-    /**
-     * LOGO base64 data
-     */
-    public static final String PARAM_LOGO_BASE64 = "logoBase64";
-
-
-    /**
-     * 样式文件,可以是 网络的文件，也可以直接是 css样式.
-     */
-    public static final String PARAM_CSS_STYLE = "cssStyle";
 
     /**
      * Initialization of the servlet. <br>

@@ -2,8 +2,6 @@ package cn.mapway.document.parser;
 
 import java.util.ArrayList;
 
-// TODO: Auto-generated Javadoc
-
 /**
  * 类深度数据.
  *
