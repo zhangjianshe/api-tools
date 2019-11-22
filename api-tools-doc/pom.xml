@@ -5,11 +5,13 @@
     <parent>
         <artifactId>api-tools</artifactId>
         <groupId>cn.mapway</groupId>
-        <version>1.0-SNAPSHOT</version>
+        <version>3.0.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>api-tools-doc</artifactId>
+    <packaging>jar</packaging>
+
     <dependencies>
         <dependency>
             <groupId>javax.servlet</groupId>
@@ -50,6 +52,74 @@
     </dependencies>
 
 
+    <profiles>
+        <profile>
+            <id>to-ziroom</id>
+            <distributionManagement>
+                <snapshotRepository>
+                    <id>ziroom</id>
+                    <url>http://mvn.ziroom.com/smarthome_snapshot</url>
+                </snapshotRepository>
+                <repository>
+                    <id>ziroom</id>
+                    <url>http://mvn.ziroom.com/smarthome_release</url>
+                </repository>
+            </distributionManagement>
+        </profile>
+        <profile>
+            <id>release</id>
+            <build>
+                <pluginManagement>
+                    <plugins>
+                        <!-- Source -->
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-source-plugin</artifactId>
+                            <version>2.2.1</version>
+                            <executions>
+                                <execution>
+                                    <phase>package</phase>
+                                    <goals>
+                                        <goal>jar-no-fork</goal>
+                                    </goals>
+                                </execution>
+                            </executions>
+                        </plugin>
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-javadoc-plugin</artifactId>
+                            <version>2.9.1</version>
+                            <executions>
+                                <execution>
+                                    <phase>package</phase>
+                                    <goals>
+                                        <goal>jar</goal>
+                                    </goals>
+                                </execution>
+                            </executions>
+                        </plugin>
+                        <!-- GPG -->
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-gpg-plugin</artifactId>
+                            <version>1.5</version>
+                            <executions>
+                                <execution>
+                                    <phase>verify</phase>
+                                    <goals>
+                                        <goal>sign</goal>
+                                    </goals>
+                                    <configuration>
+                                        <keyname>${gpg.keyname}</keyname>
+                                    </configuration>
+                                </execution>
+                            </executions>
+                        </plugin>
+                    </plugins>
+                </pluginManagement>
+            </build>
+        </profile>
+    </profiles>
 
 
 </project>

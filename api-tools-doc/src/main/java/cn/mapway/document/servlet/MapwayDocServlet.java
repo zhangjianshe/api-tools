@@ -11,6 +11,7 @@ import org.nutz.lang.Files;
 import org.nutz.lang.Lang;
 import org.nutz.lang.Streams;
 import org.nutz.lang.Strings;
+import org.nutz.lang.random.R;
 import org.nutz.log.Log;
 import org.nutz.log.Logs;
 
@@ -29,7 +30,6 @@ import java.util.Enumeration;
  * @author zhangjianshe
  */
 public class MapwayDocServlet extends HttpServlet {
-
 
     /**
      * 作者.
@@ -99,6 +99,10 @@ public class MapwayDocServlet extends HttpServlet {
      * The Constant serialVersionUID.
      */
     private static final long serialVersionUID = 1L;
+    /**
+     * 本地的缓存文件名，每次重启都会随机生成这个文件名
+     */
+    private static String localFileName = R.captchaChar(10) + ".data";
     /**
      * 日志记录器.
      */
@@ -276,7 +280,7 @@ public class MapwayDocServlet extends HttpServlet {
      */
     private File getCacheFileName() {
 
-        return new File(getTempFolder() + "/html.data");
+        return new File(getTempFolder() + "/" + localFileName);
     }
 
     /**
@@ -409,7 +413,7 @@ public class MapwayDocServlet extends HttpServlet {
      */
     public String getTempFolder() {
         String folder = System.getProperty("java.io.tmpdir");
-        System.out.printf("temporary fold >" + folder);
+        log.info("temporary folder >" + folder);
         return folder;
     }
 }
