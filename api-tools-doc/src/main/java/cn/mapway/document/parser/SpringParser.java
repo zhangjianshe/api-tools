@@ -638,14 +638,14 @@ public class SpringParser {
                     tackleMap(fi, list);
 
                 } else if (isGeneric(c)) {
-                    tackleListGnericType(list, f, fi);
+                    tackleListGenericType(list, f, fi);
 
                 } else {
 
                     tackleListObject(fi, list, c);
                 }
             } else if (isGeneric(f.getType())) {
-                tackleGnericType(instance, f, fi);
+                tackleGenericType(instance, f, fi);
 
             } else {
                 // 该字段是一个对象类，循环处理此类
@@ -685,7 +685,6 @@ public class SpringParser {
                 } catch (Exception e) {
                     Logs.get().error(f.getName() + "  " + e.getMessage());
                 }
-
             }
         }
     }
@@ -725,10 +724,15 @@ public class SpringParser {
      * @throws IllegalAccessException
      * @throws InstantiationException
      */
-    private void tackleGnericType(Object instance, Field f, ObjectInfo fi)
+    private void tackleGenericType(Object instance, Field f, ObjectInfo fi)
             throws IllegalAccessException, InstantiationException {
         // 是一个泛型类 处理特殊的注解
         fi.type = "Object";
+        fillObjectInfoWithField(f, fi);
+        f.set(instance, new Object());
+    }
+
+    private void fillObjectInfoWithField(Field f, ObjectInfo fi) throws IllegalAccessException, InstantiationException {
         RuntimeType rt = f.getAnnotation(RuntimeType.class);
         if (rt == null) {
             // 程序员没有添加注解，需要补充完整
@@ -740,7 +744,6 @@ public class SpringParser {
                 fi.refs.add(handleParameter(cls, ""));
             }
         }
-        f.set(instance, new Object());
     }
 
     /**
@@ -750,21 +753,11 @@ public class SpringParser {
      * @throws IllegalAccessException
      * @throws InstantiationException
      */
-    private void tackleListGnericType(List instance, Field f, ObjectInfo fi)
+    private void tackleListGenericType(List instance, Field f, ObjectInfo fi)
             throws IllegalAccessException, InstantiationException {
         // 是一个泛型类 处理特殊的注解
         fi.type = "List<Object>";
-        RuntimeType rt = f.getAnnotation(RuntimeType.class);
-        if (rt == null) {
-            // 程序员没有添加注解，需要补充完整
-            fi.summary = "请程序员添加注解 RuntimeType";
-        } else {
-            // 处理程序员添加的注解
-            for (int i = 0; i < rt.value().length; i++) {
-                Class<?> cls = rt.value()[i];
-                fi.refs.add(handleParameter(cls, ""));
-            }
-        }
+        fillObjectInfoWithField(f, fi);
         instance.add(new Object());
     }
 
