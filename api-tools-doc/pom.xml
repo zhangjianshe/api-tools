@@ -8,10 +8,30 @@
         <version>3.0.6</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-
     <artifactId>api-tools-doc</artifactId>
     <packaging>jar</packaging>
-
+    <properties>
+        <gpg.keyname>A6EA8C3E</gpg.keyname>
+    </properties>
+    <name>api tools doc</name>
+    <description>auto gen doc from api with ui</description>
+    <url>http://api-tools.mapway.cn</url>
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+    <scm>
+        <url>https://github.com/zhangjianshe/api-tools</url>
+    </scm>
+    <developers>
+        <developer>
+            <name>zhangjianshe</name>
+            <email>zhangjianshe@gmail.com</email>
+        </developer>
+    </developers>
     <dependencies>
         <dependency>
             <groupId>javax.servlet</groupId>
@@ -50,8 +70,6 @@
             <version>1.0.0.GA</version>
         </dependency>
     </dependencies>
-
-
     <build>
         <plugins>
             <!-- Source -->
@@ -71,7 +89,6 @@
         </plugins>
     </build>
     <profiles>
-
         <profile>
             <id>release</id>
             <build>
@@ -84,7 +101,7 @@
                             <version>2.2.1</version>
                             <executions>
                                 <execution>
-                                    <phase>package</phase>
+                                    <id>attach-sources</id>
                                     <goals>
                                         <goal>jar-no-fork</goal>
                                     </goals>
@@ -97,7 +114,7 @@
                             <version>2.9.1</version>
                             <executions>
                                 <execution>
-                                    <phase>package</phase>
+                                    <id>attach-javadocs</id>
                                     <goals>
                                         <goal>jar</goal>
                                     </goals>
@@ -126,6 +143,4 @@
             </build>
         </profile>
     </profiles>
-
-
 </project>
