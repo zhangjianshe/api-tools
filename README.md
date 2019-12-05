@@ -23,8 +23,9 @@
            
 
 ## 使用例子展示
-    ![例子](https://raw.githubusercontent.com/zhangjianshe/api-tools/master/example.png)
 
+ <img src="https://github.com/zhangjianshe/api-tools/blob/master/example.png?raw=true" width="500px" />
+ 
 ## API文档使用方法
  
  使用方式有两种一种是 SpringBoot集成，一种直接使用Servlet
