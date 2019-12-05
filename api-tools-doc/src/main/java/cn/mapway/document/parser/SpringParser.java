@@ -1,28 +1,9 @@
 package cn.mapway.document.parser;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.lang.reflect.TypeVariable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-
+import cn.mapway.document.annotation.*;
 import cn.mapway.document.helper.Markdowns;
 import cn.mapway.document.helper.Scans;
-import cn.mapway.document.module.ApiDoc;
-import cn.mapway.document.module.Entry;
-import cn.mapway.document.module.Group;
-import cn.mapway.document.module.ObjectInfo;
+import cn.mapway.document.module.*;
 import org.nutz.castor.Castors;
 import org.nutz.json.Json;
 import org.nutz.json.JsonFormat;
@@ -32,22 +13,15 @@ import org.nutz.lang.Mirror;
 import org.nutz.lang.Strings;
 import org.nutz.log.Logs;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-
-import cn.mapway.document.annotation.ApiField;
-import cn.mapway.document.annotation.ApiStyle;
-import cn.mapway.document.annotation.Code;
-import cn.mapway.document.annotation.Codes;
-import cn.mapway.document.annotation.DevelopmentState;
-import cn.mapway.document.annotation.Doc;
-import cn.mapway.document.annotation.RuntimeType;
-import cn.mapway.document.module.FieldCode;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.*;
+import java.util.*;
 
 /**
  * 解析Spring 注解.
@@ -65,6 +39,27 @@ public class SpringParser {
      * The m context.
      */
     GenContext mContext;
+    /**
+     * 类深度信息.
+     */
+    Deeps deeps;
+
+    /**
+     * The main method.
+     *
+     * @param args the arguments
+     * @throws IllegalArgumentException the illegal argument exception
+     * @throws IllegalAccessException   the illegal access exception
+     * @throws InstantiationException   the instantiation exception
+     */
+    public static void main(String[] args)
+            throws IllegalArgumentException, IllegalAccessException, InstantiationException {
+
+        SpringParser p = new SpringParser();
+
+        ApiDoc doc = p.parse(new GenContext(), "cn.mapway.doc2.test");
+        System.out.println(Json.toJson(doc));
+    }
 
     /**
      * 解析包中的类.
@@ -165,11 +160,11 @@ public class SpringParser {
         Doc doc = c.getAnnotation(Doc.class);
         String group_base_path = doc.group();
 
-        Group apigroup = document.findGroup(group_base_path);
+        Group apiGroup = document.findGroup(group_base_path);
 
-        apigroup.summary += doc.desc().length() > 0 ? doc.desc() : "";
-        apigroup.summary += parseRef(c, doc.refs());
-        apigroup.order = doc.order();
+        apiGroup.summary += doc.desc().length() > 0 ? doc.desc() : "";
+        apiGroup.summary += parseRef(c, doc.refs());
+        apiGroup.order = doc.order();
 
         String basepath = "";
 
@@ -222,12 +217,10 @@ public class SpringParser {
             throws IllegalArgumentException, IllegalAccessException, InstantiationException {
         // 如果没有添加注解 就不输出这个接口的文档
         Doc summary = m.getAnnotation(Doc.class);
-        if(null==summary)
-        {
+        if (null == summary) {
             return null;
         }
         Entry e = new Entry();
-
 
 
         RequestMapping rm = m.getAnnotation(RequestMapping.class);
@@ -249,7 +242,6 @@ public class SpringParser {
                 }
             }
         }
-
 
 
         if (e.invokeMethods.size() == 0) {
@@ -428,7 +420,7 @@ public class SpringParser {
             boolean isMarkdown = Files.getSuffixName(ref).equalsIgnoreCase("md");
 
             String desc = Scans.readResource(type.getPackage().getName(), ref);
-
+            desc = desc.replaceAll("\\$\\{PACKAGE\\}", type.getPackage().getName());
             if (isMarkdown) {
                 //转换markdown to html
                 desc = translateMarkdown(desc);
@@ -439,7 +431,6 @@ public class SpringParser {
         }
         return sb.toString();
     }
-
 
     /**
      * 转换Markdown文件格式.
@@ -546,11 +537,6 @@ public class SpringParser {
     }
 
     /**
-     * 类深度信息.
-     */
-    Deeps deeps;
-
-    /**
      * 处理字段.
      *
      * @param instance the instance
@@ -631,14 +617,14 @@ public class SpringParser {
                 ArrayList list = new ArrayList();
                 Type type = getGenericType(f);
 
-                Logs.get().info("handle list field " + f.getName() + " with type " + type.getTypeName());
+                Logs.get().debug("handle list field " + f.getName() + " with type " + type.getTypeName());
 
                 Class<?> c = null;
                 if (type instanceof ParameterizedType) {
                     ParameterizedType t = (ParameterizedType) type;
                     c = (Class<?>) t.getRawType();
 
-                } else if (type instanceof sun.reflect.generics.reflectiveObjects.TypeVariableImpl) {
+                } else if (type instanceof TypeVariable) {
 
                     c = Object.class;
                 } else {
@@ -693,8 +679,12 @@ public class SpringParser {
         if (instance != null) {
             // 处理例子
             if (!Strings.isBlank(wf.example())) {
-                Object obj = Castors.me().castTo(wf.example(), f.getType());
-                Mirror.me(instance).setValue(instance, f, obj);
+                try {
+                    Object obj = Castors.me().castTo(wf.example(), f.getType());
+                    Mirror.me(instance).setValue(instance, f, obj);
+                } catch (Exception e) {
+                    Logs.get().error(f.getName() + "  " + e.getMessage());
+                }
 
             }
         }
@@ -814,7 +804,7 @@ public class SpringParser {
             throws IllegalAccessException, InstantiationException {
 
         Object cinstance = newInstance(c);
-        Logs.get().info("create instance " + c.getName() + " is " + Json.toJson(cinstance));
+        Logs.get().debug("create instance " + c.getName() + " is " + Json.toJson(cinstance));
         // 处理 DOc fi.summary;
 
         // 读取List数组中对象的Doc注解
@@ -953,22 +943,5 @@ public class SpringParser {
             }
         }
         return false;
-    }
-
-    /**
-     * The main method.
-     *
-     * @param args the arguments
-     * @throws IllegalArgumentException the illegal argument exception
-     * @throws IllegalAccessException   the illegal access exception
-     * @throws InstantiationException   the instantiation exception
-     */
-    public static void main(String[] args)
-            throws IllegalArgumentException, IllegalAccessException, InstantiationException {
-
-        SpringParser p = new SpringParser();
-
-        ApiDoc doc = p.parse(new GenContext(), "cn.mapway.doc2.test");
-        System.out.println(Json.toJson(doc));
     }
 }

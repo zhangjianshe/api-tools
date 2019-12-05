@@ -1,18 +1,17 @@
 package cn.mapway.document.ui.client.main;
 
-import cn.mapway.document.ui.client.component.CloseDialogBox;
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.logical.shared.CloseEvent;
-import com.google.gwt.event.logical.shared.CloseHandler;
-import com.google.gwt.uibinder.client.UiBinder;
-import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.ui.*;
 import cn.mapway.document.ui.client.component.Clients;
+import cn.mapway.document.ui.client.component.CloseDialogBox;
 import cn.mapway.document.ui.client.module.Entry;
 import cn.mapway.document.ui.client.resource.SysResource;
 import cn.mapway.document.ui.client.test.TestPanel;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.*;
 
 
 /**
@@ -24,12 +23,63 @@ public class EntryPanel extends Composite {
      * The ui binder.
      */
     private static EntryPanelUiBinder uiBinder = GWT.create(EntryPanelUiBinder.class);
-
     /**
-     * The Interface EntryPanelUiBinder.
+     * The m entry.
      */
-    interface EntryPanelUiBinder extends UiBinder<Widget, EntryPanel> {
-    }
+    Entry mEntry;
+    /**
+     * The java source.
+     */
+    @UiField
+    HTML javaSource;
+    /**
+     * The lb TITLE.
+     */
+    @UiField
+    Label lbTITLE;
+    /**
+     * The lb SUMMARY.
+     */
+    @UiField
+    HTML lbSUMMARY;
+    /**
+     * The lb URL.
+     */
+    @UiField
+    Label lbURL;
+    /**
+     * The lb AUTHOR.
+     */
+    @UiField
+    Label lbAUTHOR;
+    /**
+     * The lb INVOKE.
+     */
+    @UiField
+    Label lbINVOKE;
+    /**
+     * The para in.
+     */
+    @UiField
+    InputParameterPanel paraIn;
+    /**
+     * The para out.
+     */
+    @UiField
+    OutputParameter paraOut;
+    /**
+     * The dlg.
+     */
+    CloseDialogBox dlg;
+    /**
+     * The test panel.
+     */
+    TestPanel testPanel = null;
+    /**
+     * The btn test.
+     */
+    @UiField
+    Button btnTest;
 
     /**
      * Instantiates a new entry panel.
@@ -40,11 +90,6 @@ public class EntryPanel extends Composite {
     }
 
     /**
-     * The m entry.
-     */
-    Entry mEntry;
-
-    /**
      * Parses the.
      *
      * @param e the e
@@ -53,7 +98,9 @@ public class EntryPanel extends Composite {
         mEntry = e;
         lbTITLE.setText(e.title());
         lbSUMMARY.setHTML(e.summary());
-        lbURL.setText("接口网址:  " + Clients.getHostPort() + e.url());
+
+
+        lbURL.setText("接口网址:  " + Clients.calculateInvokePath(e));
         lbAUTHOR.setText("作者:" + e.author());
 
         StringBuilder sb = new StringBuilder();
@@ -110,70 +157,6 @@ public class EntryPanel extends Composite {
     }
 
     /**
-     * The java source.
-     */
-    @UiField
-    HTML javaSource;
-
-    /**
-     * The lb TITLE.
-     */
-    @UiField
-    Label lbTITLE;
-
-    /**
-     * The lb SUMMARY.
-     */
-    @UiField
-    HTML lbSUMMARY;
-
-    /**
-     * The lb URL.
-     */
-    @UiField
-    Label lbURL;
-
-    /**
-     * The lb AUTHOR.
-     */
-    @UiField
-    Label lbAUTHOR;
-
-    /**
-     * The lb INVOKE.
-     */
-    @UiField
-    Label lbINVOKE;
-
-    /**
-     * The para in.
-     */
-    @UiField
-    InputParameterPanel paraIn;
-
-    /**
-     * The para out.
-     */
-    @UiField
-    OutputParameter paraOut;
-
-    /**
-     * The dlg.
-     */
-    CloseDialogBox dlg;
-
-    /**
-     * The test panel.
-     */
-    TestPanel testPanel = null;
-
-    /**
-     * The btn test.
-     */
-    @UiField
-    Button btnTest;
-
-    /**
      * On test.
      *
      * @param e the e
@@ -191,8 +174,14 @@ public class EntryPanel extends Composite {
         }
         dlg.center();
         dlg.setText("接口测试-" + mEntry.title());
-        dlg.setSummary(Clients.getHostPort() + mEntry.url());
+        dlg.setSummary(Clients.calculateInvokePath(mEntry));
         testPanel.invoke(mEntry);
+    }
+
+    /**
+     * The Interface EntryPanelUiBinder.
+     */
+    interface EntryPanelUiBinder extends UiBinder<Widget, EntryPanel> {
     }
 
 }

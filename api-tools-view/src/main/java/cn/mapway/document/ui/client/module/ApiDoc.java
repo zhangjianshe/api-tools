@@ -25,7 +25,7 @@ public class ApiDoc extends JavaScriptObject {
      */
     public final native String author()/*-{
         return this.author;
-	}-*/;
+    }-*/;
 
     /**
      * 标题.
@@ -33,8 +33,8 @@ public class ApiDoc extends JavaScriptObject {
      * @return the string
      */
     public final native String title()/*-{
-		return this.title;
-	}-*/;
+        return this.title;
+    }-*/;
 
     /**
      * API版本.
@@ -42,8 +42,8 @@ public class ApiDoc extends JavaScriptObject {
      * @return the string
      */
     public final native String version()/*-{
-		return this.version;
-	}-*/;
+        return this.version;
+    }-*/;
 
     /**
      * API关联网址.
@@ -51,8 +51,8 @@ public class ApiDoc extends JavaScriptObject {
      * @return the string
      */
     public final native String link()/*-{
-		return this.link;
-	}-*/;
+        return this.link;
+    }-*/;
 
     /**
      * API简介.
@@ -60,8 +60,8 @@ public class ApiDoc extends JavaScriptObject {
      * @return the string
      */
     public final native String summary()/*-{
-		return this.summary;
-	}-*/;
+        return this.summary;
+    }-*/;
 
     ;
 
@@ -71,8 +71,8 @@ public class ApiDoc extends JavaScriptObject {
      * @return the string
      */
     public final native String description()/*-{
-		return this.description;
-	}-*/;
+        return this.description;
+    }-*/;
 
     /**
      * 接口访问的基地址.
@@ -80,8 +80,8 @@ public class ApiDoc extends JavaScriptObject {
      * @return the string
      */
     public final native String basePath()/*-{
-		return this.basePath;
-	}-*/;
+        return this.basePath;
+    }-*/;
 
     /**
      * API分组的根节点.
@@ -89,8 +89,8 @@ public class ApiDoc extends JavaScriptObject {
      * @return the group
      */
     public final native Group root()/*-{
-		return this.root;
-	}-*/;
+        return this.root;
+    }-*/;
 
     /**
      * WordUrl.
@@ -98,8 +98,8 @@ public class ApiDoc extends JavaScriptObject {
      * @return the group
      */
     public final native String wordUrl()/*-{
-		return this.wordUrl;
-	}-*/;
+        return this.wordUrl;
+    }-*/;
 
     /**
      * WordUrl.
@@ -107,8 +107,8 @@ public class ApiDoc extends JavaScriptObject {
      * @return the group
      */
     public final native String domain()/*-{
-		return this.domain;
-	}-*/;
+        return this.domain;
+    }-*/;
 
     /**
      * logo.
@@ -116,8 +116,8 @@ public class ApiDoc extends JavaScriptObject {
      * @return the group
      */
     public final native String logo()/*-{
-		return this.logo;
-	}-*/;
+        return this.logo;
+    }-*/;
 
     /**
      * WordUrl.
@@ -125,8 +125,8 @@ public class ApiDoc extends JavaScriptObject {
      * @return the group
      */
     public final native String copyright()/*-{
-		return this.copyright;
-	}-*/;
+        return this.copyright;
+    }-*/;
 
     /**
      * Gets the downloadsss
@@ -134,8 +134,8 @@ public class ApiDoc extends JavaScriptObject {
      * @return the downloads
      */
     public final native JsArray<JarInfo> getDownloads()/*-{
-		return this.downloads;
-	}-*/;
+        return this.downloads;
+    }-*/;
 
     /**
      * s
@@ -143,8 +143,8 @@ public class ApiDoc extends JavaScriptObject {
      * @return string
      */
     public final native String apiVersion()/*-{
-		return this.apiVersion;
-	}-*/;
+        return this.apiVersion;
+    }-*/;
 
     /**
      * s
@@ -152,7 +152,7 @@ public class ApiDoc extends JavaScriptObject {
      * @return string
      */
     public final native String homeUrl() /*-{
-    return this.homeUrl || '';
+        return this.homeUrl || '';
     }-*/;
 
     /**
@@ -162,5 +162,14 @@ public class ApiDoc extends JavaScriptObject {
      */
     public final native String cssStyle()/*-{
         return this.cssStyle;
+    }-*/;
+
+    /**
+     * servlet Path
+     *
+     * @return string
+     */
+    public final native String servletPath()/*-{
+        return this.servletPath;
     }-*/;
 }

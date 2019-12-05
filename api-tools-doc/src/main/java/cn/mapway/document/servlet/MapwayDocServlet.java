@@ -5,7 +5,6 @@ import cn.mapway.document.helper.ParseType;
 import cn.mapway.document.helper.Scans;
 import cn.mapway.document.module.ApiDoc;
 import cn.mapway.document.parser.GenContext;
-import cn.mapway.document.resource.Template;
 import org.nutz.json.Json;
 import org.nutz.lang.Files;
 import org.nutz.lang.Lang;
@@ -108,6 +107,10 @@ public class MapwayDocServlet extends HttpServlet {
      */
     private static Log log = Logs.getLog("Mapway-Api-Document");
     /**
+     * 资源报名
+     */
+    private final String RESOURCE_PACKAGE = "cn.mapway.document.resource";
+    /**
      * 文档上下文环境.
      */
     private GenContext context;
@@ -187,6 +190,9 @@ public class MapwayDocServlet extends HttpServlet {
         // |-------- Server-----|--app----|servlet| pathinfo
         // PathInfo http://www.ennwifi.cn/mapwaydoc/doc/ demo/123
         String pathInfo = request.getPathInfo();
+        String servletPath = request.getServletPath();
+        log.info("servlet Path " + servletPath);
+        log.info("path info " + pathInfo);
         dispatch(pathInfo, request, response);
 
     }
@@ -202,15 +208,16 @@ public class MapwayDocServlet extends HttpServlet {
      */
     private void dispatch(String path, HttpServletRequest request, HttpServletResponse response)
             throws IOException {
+        String servletPath = request.getServletPath();
         if (Strings.isBlank(path) || path.equals("/") || path.equals("/index")
                 || path.equals("/index.html")) {
-            genhtml(request, response);
+            genHtml(servletPath,request, response);
             return;
         }
         if (path.endsWith("/clear.cache.gif")) {
-            byteout(response, DocHelper.getClearGifData(), null);
+            byteOut(response, DocHelper.getClearGifData(), null);
         } else if (path.equals("/help")) {
-            html(response, Template.readTemplate("/main/java/mapway/document/resource/help.html"));
+            html(response, Scans.readResource(RESOURCE_PACKAGE, "help.html"));
         } else if (path.equals("/data")) {
             DocHelper helper = new DocHelper();
             ApiDoc api = helper.toDoc(ParseType.PT_SPRING, context, packageNames);
@@ -230,7 +237,7 @@ public class MapwayDocServlet extends HttpServlet {
             String packageName = url.substring(0, pos);
             String resName = url.substring(pos + 1);
             byte[] data = Scans.readBinResource(packageName, resName);
-            byteout(response, data, null);
+            byteOut(response, data, null);
         }
 
     }
@@ -238,15 +245,16 @@ public class MapwayDocServlet extends HttpServlet {
     /**
      * 输出文档HTML页面.
      *
+     * @param servletPath
      * @param request  the request
      * @param response the response
      */
-    private void genhtml(HttpServletRequest request, HttpServletResponse response) {
+    private void genHtml(String servletPath, HttpServletRequest request, HttpServletResponse response) {
 
         File htmlFile = getCacheFileName();
 
         if (!htmlFile.exists()) {
-            writeToLocal(htmlFile);
+            writeToLocal(servletPath,htmlFile);
         }
 
         try {
@@ -258,13 +266,13 @@ public class MapwayDocServlet extends HttpServlet {
         }
     }
 
-    private void writeToLocal(File htmlFile) {
+    private void writeToLocal(String servletPath, File htmlFile) {
         DocHelper helper = new DocHelper();
         helper.setAntHome(antHome);
 
         ApiDoc api = helper.toDoc(ParseType.PT_SPRING, context, packageNames);
 
-
+        api.servletPath=servletPath;
         // 设置下载目录
 
         String html = helper.genHTML(api);
@@ -300,10 +308,9 @@ public class MapwayDocServlet extends HttpServlet {
      * @param data        the data
      * @param contentType the content type
      */
-    private void byteout(HttpServletResponse response, byte[] data, String contentType) {
+    private void byteOut(HttpServletResponse response, byte[] data, String contentType) {
         if (!Strings.isBlank(contentType)) {
             response.setContentType(contentType);
-
         }
         try {
             response.getOutputStream().write(data);

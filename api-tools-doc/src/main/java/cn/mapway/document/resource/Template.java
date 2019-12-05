@@ -12,6 +12,9 @@
  *******************************************************************************/
 package cn.mapway.document.resource;
 
+import org.nutz.log.Log;
+import org.nutz.log.Logs;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -23,6 +26,8 @@ import java.io.InputStream;
  */
 public class Template {
 
+    private final static Log log = Logs.getLog(Template.class);
+
     /**
      * 读取相对资源路径.
      *
@@ -33,16 +38,23 @@ public class Template {
     public final static String readTemplate(String fileName) throws IOException {
 
         InputStream in = Template.class.getResourceAsStream(fileName);
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        int count = 0;
-        byte[] bytes = new byte[1024];
-        count = in.read(bytes);
-        while (count > 0) {
-            out.write(bytes, 0, count);
-            count = in.read(bytes);
-        }
 
-        String txt = new String(out.toByteArray(), "UTF-8");
-        return txt;
+        String returnText = "error to read file @" + fileName;
+        if (in != null) {
+            log.info("read file @ " + fileName);
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            int count = 0;
+            byte[] bytes = new byte[1024];
+            count = in.read(bytes);
+            while (count > 0) {
+                out.write(bytes, 0, count);
+                count = in.read(bytes);
+            }
+            returnText = new String(out.toByteArray(), "UTF-8");
+            in.close();
+        } else {
+            log.info("read file @ " + fileName + ",but sorry i can not find it!");
+        }
+        return returnText;
     }
 }

@@ -9,7 +9,6 @@ import org.nutz.json.JsonFormat;
 
 import cn.mapway.document.parser.GenContext;
 import cn.mapway.document.parser.SpringParser;
-import cn.mapway.document.resource.Template;
 import org.nutz.lang.Strings;
 
 
@@ -48,7 +47,7 @@ public class DocHelper {
 
     /**
      * 生成接口文档JSON格式.
-     *
+     *  data = data.replaceAll("\\$\\{PACKAGE\\}", pacakgeName);
      * @param pt       the pt
      * @param context  the context
      * @param packages the packages
@@ -60,14 +59,7 @@ public class DocHelper {
             ApiDoc doc = new ApiDoc();
             try {
                 doc = parser.parse(context, packages);
-            } catch (IllegalArgumentException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            } catch (InstantiationException e) {
-                // TODO Auto-generated catch block
+            } catch (IllegalArgumentException | IllegalAccessException | InstantiationException e) {
                 e.printStackTrace();
             }
             return doc;
@@ -89,17 +81,19 @@ public class DocHelper {
         return genHTML(doc);
     }
 
+    private final String RESOURCE_PACKAGE="cn.mapway.document.resource";
     /**
      * 生成文档.
+     * template
      *
      * @param doc the doc
      * @return the string
      */
     public String genHTML(ApiDoc doc) {
-        String template;
+        String template="";
 
-        template = Scans.readResource("cn.mapway.document.resource", "doctemplate.html");
-        String ui = Scans.readResource("cn.mapway.document.resource", "apidoc.nocache.js");
+        template = Scans.readResource(RESOURCE_PACKAGE, "index.html");
+        String ui = Scans.readResource(RESOURCE_PACKAGE, "docui.nocache.js");
         String json = Json.toJson(doc, JsonFormat.tidy());
         String customStyle = "";
 
@@ -116,9 +110,7 @@ public class DocHelper {
                 }
             }
         }
-        //TODO 增加markdown样式表
 
-        System.out.print("custom style>" + customStyle);
         template = template.replace("API_CSS_STYLE", customStyle);
         template = template.replace("API_DOC_DATA", json);
         template = template.replace("API_DOC_UI", ui);
@@ -129,7 +121,7 @@ public class DocHelper {
     /**
      * The gifdata.
      */
-    private static byte[] gifdata = {0x47, 0x49, 0x46, 0x38, 0x39, 0x61, 0x01, 0x00, 0x01, 0x00, (byte) 0x80, 0x00,
+    private static byte[] clearGifData = {0x47, 0x49, 0x46, 0x38, 0x39, 0x61, 0x01, 0x00, 0x01, 0x00, (byte) 0x80, 0x00,
             0x00, (byte) 0xff, (byte) 0xff, (byte) 0xff, (byte) 0xff, (byte) 0xff, (byte) 0xff, 0x21, (byte) 0xf9, 0x04,
             0x01, 0x0a, 0x00, 0x01, 0x00, 0x2c, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00, 0x01, 0x00, 0x00, 0x02, 0x02, 0x4c,
             0x01, 0x00, 0x3b};
@@ -140,7 +132,7 @@ public class DocHelper {
      * @return the clear gif data
      */
     public static byte[] getClearGifData() {
-        return gifdata;
+        return clearGifData;
     }
 
     /**

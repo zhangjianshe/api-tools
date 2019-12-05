@@ -26,7 +26,7 @@ public class Entry extends JavaScriptObject {
      */
     public final native String methodName()/*-{
         return this.methodName;
-	}-*/;
+    }-*/;
 
     /**
      * 接口名称.
@@ -35,7 +35,7 @@ public class Entry extends JavaScriptObject {
      */
     public final native String title()/*-{
         return this.title;
-	}-*/;
+    }-*/;
 
     /**
      * 接口说明.
@@ -44,7 +44,7 @@ public class Entry extends JavaScriptObject {
      */
     public final native String summary()/*-{
         return this.summary;
-	}-*/;
+    }-*/;
 
     /**
      * 接口相对路径.
@@ -53,7 +53,7 @@ public class Entry extends JavaScriptObject {
      */
     public final native String relativePath()/*-{
         return this.relativePath;
-	}-*/;
+    }-*/;
 
     /**
      * 调用类型.
@@ -62,7 +62,7 @@ public class Entry extends JavaScriptObject {
      */
     public final native JsArrayString invokeMethods()/*-{
         return this.invokeMethods;
-	}-*/;
+    }-*/;
 
     /**
      * 输入参数.
@@ -71,7 +71,7 @@ public class Entry extends JavaScriptObject {
      */
     public final native JsArray<ObjectInfo> input()/*-{
         return this.input;
-	}-*/;
+    }-*/;
 
     /**
      * 输入参数.
@@ -80,7 +80,7 @@ public class Entry extends JavaScriptObject {
      */
     public final native JsArray<ObjectInfo> pathParas()/*-{
         return this.pathParas;
-	}-*/;
+    }-*/;
 
     /**
      * 输入参数.
@@ -89,7 +89,7 @@ public class Entry extends JavaScriptObject {
      */
     public final native JsArray<ObjectInfo> queryParas()/*-{
         return this.queryParas;
-	}-*/;
+    }-*/;
 
     /**
      * 输出参数.
@@ -98,7 +98,7 @@ public class Entry extends JavaScriptObject {
      */
     public final native ObjectInfo output()/*-{
         return this.output;
-	}-*/;
+    }-*/;
 
     /**
      * 接口的排序值.
@@ -107,7 +107,7 @@ public class Entry extends JavaScriptObject {
      */
     public final native int order()/*-{
         return this.order;
-	}-*/;
+    }-*/;
 
     /**
      * 接口创建者.
@@ -116,7 +116,7 @@ public class Entry extends JavaScriptObject {
      */
     public final native String author()/*-{
         return this.author;
-	}-*/;
+    }-*/;
 
     /**
      * 方法所在的类.
@@ -125,7 +125,7 @@ public class Entry extends JavaScriptObject {
      */
     public final native String parentClassName()/*-{
         return this.parentClassName;
-	}-*/;
+    }-*/;
 
     /**
      * 开发状态.
@@ -134,7 +134,7 @@ public class Entry extends JavaScriptObject {
      */
     public final native String state()/*-{
         return this.state;
-	}-*/;
+    }-*/;
 
     /**
      * API样式.
@@ -143,7 +143,7 @@ public class Entry extends JavaScriptObject {
      */
     public final native String style()/*-{
         return this.apiStyle;
-	}-*/;
+    }-*/;
 
     /**
      * 全路径.
@@ -152,7 +152,7 @@ public class Entry extends JavaScriptObject {
      */
     public final native String url()/*-{
         return this.url;
-	}-*/;
+    }-*/;
 
     /**
      * 标签
@@ -161,5 +161,24 @@ public class Entry extends JavaScriptObject {
      */
     public final native String[] tags()/*-{
         return this.tags;
-	}-*/;
+    }-*/;
+
+
+    /**
+     * set servlet Path
+     *
+     * @param servletPath
+     */
+    public final native void servletPath(String servletPath)/*-{
+        this.servletPath = servletPath;
+    }-*/;
+
+    /**
+     * servlet path
+     *
+     * @return
+     */
+    public final native String servletPath()/*-{
+        return this.servletPath;
+    }-*/;
 }

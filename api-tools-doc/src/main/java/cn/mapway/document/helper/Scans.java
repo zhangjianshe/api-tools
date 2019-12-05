@@ -106,7 +106,6 @@ public class Scans {
             try {
                 bytes = innerReadResource(pacakgeName, fileName);
                 String data = new String(bytes, "UTF-8");
-                data = data.replaceAll("\\$\\{PACKAGE\\}", pacakgeName);
                 return data;
             } catch (IOException e) {
                 e.printStackTrace();
@@ -128,7 +127,7 @@ public class Scans {
     private static byte[] innerReadResource(String packageName, String fileName) throws IOException {
 
         // 定义一个枚举的集合 并进行循环来处理这个目录下的things
-        System.out.println(packageName + "," + fileName);
+        log.debug(packageName + "," + fileName);
 
 
         URL url = Scans.class.getClassLoader().getResource(packageName);

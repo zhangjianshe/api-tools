@@ -86,6 +86,7 @@ public class ApiDoc implements Serializable {
      * 自定义样式.
      */
     public String cssStyle;
+    public String servletPath;
 
     /**
      * Instantiates a new api doc.

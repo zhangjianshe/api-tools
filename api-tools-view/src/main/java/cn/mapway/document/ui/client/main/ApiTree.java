@@ -1,6 +1,5 @@
 package cn.mapway.document.ui.client.main;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
@@ -100,16 +99,16 @@ public class ApiTree extends Tree {
 
         Group group = data.root();
         //不显示最顶级的节点
-        parseGroup(null, group);
+        parseGroup(null, group,data);
     }
 
     /**
      * Parses the group.
-     *
-     * @param root  the root
+     *  @param root  the root
      * @param group the group
+     * @param apiDoc
      */
-    private void parseGroup(TreeItem root, Group group) {
+    private void parseGroup(TreeItem root, Group group, ApiDoc apiDoc) {
 
         JsArray<Group> subs = group.subGroups();
         // 处理子节点
@@ -126,12 +125,13 @@ public class ApiTree extends Tree {
             } else {
                 root.addItem(item);
             }
-            parseGroup(item, g);
+            parseGroup(item, g, apiDoc);
         }
         // 处理方法
         JsArray<Entry> entries = group.entries();
         for (int i = 0; i < entries.length(); i++) {
             Entry e = entries.get(i);
+            e.servletPath(apiDoc.servletPath());
             TreeItem item = new TreeItem();
             String tags = buildTags(e.tags());
 

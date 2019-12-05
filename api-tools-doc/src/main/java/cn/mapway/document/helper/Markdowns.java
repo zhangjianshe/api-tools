@@ -1,6 +1,6 @@
 package cn.mapway.document.helper;
 
-import com.sun.org.apache.bcel.internal.generic.INSTANCEOF;
+
 import org.commonmark.Extension;
 import org.commonmark.ext.gfm.tables.TablesExtension;
 import org.commonmark.node.Node;

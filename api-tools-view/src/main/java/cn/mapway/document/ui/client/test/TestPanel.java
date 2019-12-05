@@ -21,8 +21,6 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.*;
 
-import java.util.Date;
-
 
 /**
  * 测试面板.
@@ -40,18 +38,61 @@ public class TestPanel extends Composite implements HasCloseHandlers<Void> {
      * The ui binder.
      */
     private static TestPanelUiBinder uiBinder = GWT.create(TestPanelUiBinder.class);
+    @UiField
+    HorizontalPanel htmlHeaders;
+    KeyValueObjs headers;
+    @UiField
+    AceEditor editor;
     private final SelectionHandler<HistoryData> historySelectedHandler = new SelectionHandler<HistoryData>() {
         @Override
         public void onSelection(SelectionEvent<HistoryData> selectionEvent) {
             editor.setValue(selectionEvent.getSelectedItem().value);
         }
     };
+    /**
+     * The txt output.
+     */
+    @UiField
+    AceEditor result;
+    /**
+     * The m entry.
+     */
+    Entry mEntry;
+    boolean initialize = false;
+    /**
+     * The btn execute.
+     */
+    @UiField
+    Button btnExecute;
+    /**
+     * The img loadding.
+     */
+    @UiField
+    Image imgLoadding;
+    /**
+     * The btn history.
+     */
+    @UiField
+    Button btnHistory;
+    @UiField
+    Button btnHeader;
+    @UiField
+    Button btnFormat;
+    @UiField
+    Button btnClearCache;
+    @UiField
+    SplitLayoutPanel hor;
+    @UiField
+    InputHistoryPanel history;
     private final ValueChangeHandler<Integer> historyValueChangedHandler = new ValueChangeHandler<Integer>() {
         @Override
         public void onValueChange(ValueChangeEvent<Integer> valueChangeEvent) {
             changeLayout(valueChangeEvent.getValue());
         }
     };
+    TextEditor historyNameEditor;
+    HeaderEditor headEditor;
+    DialogBox dlg;
     private CloseHandler<String> itemDeleted = new CloseHandler<String>() {
         @Override
         public void onClose(CloseEvent<String> closeEvent) {
@@ -78,25 +119,6 @@ public class TestPanel extends Composite implements HasCloseHandlers<Void> {
     };
 
     /**
-     * 保存请求数据为历史纪录
-     */
-    private void saveHistory(String name) {
-        String v = LocalStorage.val(mEntry.relativePath());
-        String key = name;
-        if (v == null || v.length() == 0) {
-            LocalStorage.save(mEntry.relativePath(), key + "`" + editor.getValue());
-        } else {
-            LocalStorage.save(mEntry.relativePath(), key + "`" + editor.getValue() + "|" + v);
-        }
-    }
-
-    /**
-     * The Interface TestPanelUiBinder.
-     */
-    interface TestPanelUiBinder extends UiBinder<Widget, TestPanel> {
-    }
-
-    /**
      * Instantiates a new test panel.
      */
     public TestPanel() {
@@ -112,11 +134,18 @@ public class TestPanel extends Composite implements HasCloseHandlers<Void> {
         history.addValueChangeHandler(historyValueChangedHandler);
     }
 
-
-    @UiField
-    HorizontalPanel htmlHeaders;
-
-    KeyValueObjs headers;
+    /**
+     * 保存请求数据为历史纪录
+     */
+    private void saveHistory(String name) {
+        String v = LocalStorage.val(mEntry.relativePath());
+        String key = name;
+        if (v == null || v.length() == 0) {
+            LocalStorage.save(mEntry.relativePath(), key + "`" + editor.getValue());
+        } else {
+            LocalStorage.save(mEntry.relativePath(), key + "`" + editor.getValue() + "|" + v);
+        }
+    }
 
     /**
      * 恢复请求头的数据
@@ -142,21 +171,6 @@ public class TestPanel extends Composite implements HasCloseHandlers<Void> {
         LocalStorage.save(GWT_USER_HEADER, headers.toJSON());
     }
 
-
-    @UiField
-    AceEditor editor;
-
-    /**
-     * The txt output.
-     */
-    @UiField
-    AceEditor result;
-
-    /**
-     * The m entry.
-     */
-    Entry mEntry;
-
     @Override
     protected void onLoad() {
         super.onLoad();
@@ -167,8 +181,6 @@ public class TestPanel extends Composite implements HasCloseHandlers<Void> {
         this.setWidth(width + "px");
 
     }
-
-    boolean initialize = false;
 
     private void initJsonEditor() {
         if (initialize == false) {
@@ -224,35 +236,6 @@ public class TestPanel extends Composite implements HasCloseHandlers<Void> {
         }
     }
 
-
-    /**
-     * The btn execute.
-     */
-    @UiField
-    Button btnExecute;
-
-    /**
-     * The img loadding.
-     */
-    @UiField
-    Image imgLoadding;
-
-    /**
-     * The btn history.
-     */
-    @UiField
-    Button btnHistory;
-    @UiField
-    Button btnHeader;
-    @UiField
-    Button btnFormat;
-    @UiField
-    Button btnClearCache;
-    @UiField
-    SplitLayoutPanel hor;
-    @UiField
-    InputHistoryPanel history;
-
     /**
      * On execute.
      *
@@ -265,7 +248,7 @@ public class TestPanel extends Composite implements HasCloseHandlers<Void> {
         result.setValue("");
 
         try {
-            ApiDocProxy.fetchString(mEntry.url(), editor.getValue(), "", mEntry.invokeMethods().get(0),
+            ApiDocProxy.fetchString(Clients.calculateInvokePath(mEntry), editor.getValue(), "", mEntry.invokeMethods().get(0),
                     new IOnData<String>() {
                         @Override
                         public void onError(String url, String error) {
@@ -299,7 +282,6 @@ public class TestPanel extends Composite implements HasCloseHandlers<Void> {
 
     }
 
-
     /*
      * (non-Javadoc)
      *
@@ -310,9 +292,6 @@ public class TestPanel extends Composite implements HasCloseHandlers<Void> {
     public HandlerRegistration addCloseHandler(CloseHandler<Void> handler) {
         return addHandler(handler, CloseEvent.getType());
     }
-
-
-    TextEditor historyNameEditor;
 
     TextEditor sureEditor() {
         if (historyNameEditor == null) {
@@ -358,9 +337,6 @@ public class TestPanel extends Composite implements HasCloseHandlers<Void> {
         invoke(mEntry);
     }
 
-    HeaderEditor headEditor;
-    DialogBox dlg;
-
     @UiHandler("btnHeader")
     public void btnHeaderClick(ClickEvent event) {
         if (dlg == null) {
@@ -378,5 +354,11 @@ public class TestPanel extends Composite implements HasCloseHandlers<Void> {
             });
         }
         dlg.center();
+    }
+
+    /**
+     * The Interface TestPanelUiBinder.
+     */
+    interface TestPanelUiBinder extends UiBinder<Widget, TestPanel> {
     }
 }

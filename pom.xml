@@ -3,11 +3,10 @@
          xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
     <groupId>cn.mapway</groupId>
     <artifactId>api-tools</artifactId>
     <packaging>pom</packaging>
-    <version>3.0.0-SNAPSHOT</version>
+    <version>3.0.6</version>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
@@ -16,21 +15,57 @@
         <maven.compiler.target>1.8</maven.compiler.target>
         <gpg.keyname>717E6B0A</gpg.keyname>
     </properties>
+    <name>api tools</name>
+    <description>auto gen doc from api with ui</description>
+    <url>http://api-tools.mapway.cn</url>
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+    <scm>
+        <url>https://github.com/zhangjianshe/api-tools</url>
+    </scm>
+    <developers>
+        <developer>
+            <name>zhangjianshe</name>
+            <email>zhangjianshe@gmail.com</email>
+        </developer>
+    </developers>
     <modules>
-        <module>api-tools-doc</module>
         <module>api-tools-view</module>
+        <module>api-tools-doc</module>
+        <module>api-tools-test</module>
     </modules>
-
-
-    <distributionManagement>
-        <snapshotRepository>
-            <id>sonatype_oss</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
-        </snapshotRepository>
-        <repository>
-            <id>sonatype_oss</id>
-            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-        </repository>
-    </distributionManagement>
+    <profiles>
+        <profile>
+            <id>to-ziroom</id>
+            <distributionManagement>
+                <snapshotRepository>
+                    <id>ziroom</id>
+                    <url>http://mvn.ziroom.com/smarthome_snapshot</url>
+                </snapshotRepository>
+                <repository>
+                    <id>ziroom</id>
+                    <url>http://mvn.ziroom.com/smarthome_release</url>
+                </repository>
+            </distributionManagement>
+        </profile>
+        <profile>
+            <id>release</id>
+            <distributionManagement>
+                <snapshotRepository>
+                    <id>sonatype_oss</id>
+                    <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+                </snapshotRepository>
+                <repository>
+                    <id>sonatype_oss</id>
+                    <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+                </repository>
+            </distributionManagement>
+        </profile>
+    </profiles>
 
 </project>

@@ -2,18 +2,19 @@ package cn.mapway.document.configure;
 
 
 import cn.mapway.document.servlet.MapwayDocServlet;
+import org.nutz.lang.Lang;
+import org.nutz.lang.Strings;
 import org.nutz.log.Log;
 import org.nutz.log.Logs;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.boot.autoconfigure.web.WebMvcAutoConfiguration;
+import org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -51,7 +52,8 @@ public class DocAutoConfigure {
         ServletRegistrationBean srb = new ServletRegistrationBean();
         MapwayDocServlet servlet = new MapwayDocServlet();
         srb.setServlet(servlet);
-        srb.setUrlMappings(Arrays.asList(properties.url));
+
+        srb.setUrlMappings(Lang.array2list(Strings.split(properties.url, false, ',', ';')));
 
         Map<String, String> params = new HashMap<String, String>();
         params.put(MapwayDocServlet.PARAM_AUTHOR, properties.author);
