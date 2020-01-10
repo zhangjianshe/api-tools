@@ -6,7 +6,7 @@ package cn.mapway.document.ui.client.component.ace;
 public interface AceCommandLineListener {
 	/**
 	 * Notify subscriber (e.g. editor) that command was entered.
-	 * @param command
+	 * @param command ss
 	 */
 	public void onCommandEntered(String command);
 }

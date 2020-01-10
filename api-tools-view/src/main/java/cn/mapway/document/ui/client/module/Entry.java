@@ -167,7 +167,7 @@ public class Entry extends JavaScriptObject {
     /**
      * set servlet Path
      *
-     * @param servletPath
+     * @param servletPath ss
      */
     public final native void servletPath(String servletPath)/*-{
         this.servletPath = servletPath;
@@ -176,7 +176,7 @@ public class Entry extends JavaScriptObject {
     /**
      * servlet path
      *
-     * @return
+     * @return strng
      */
     public final native String servletPath()/*-{
         return this.servletPath;

@@ -12,6 +12,7 @@ public class AceCommandArgs {
 	
 	/**
 	 * Create map argument. In case <code>data</code> is null map will be empty.
+	 * @param data data
 	 */
 	public AceCommandArgs(Map<String, String> data) {
 		value = JavaScriptObject.createObject();
@@ -22,6 +23,7 @@ public class AceCommandArgs {
 	
 	/**
 	 * Create text argument.
+	 * @param value string
 	 */
 	public AceCommandArgs(String value) {
 		this.value = value;
@@ -29,8 +31,9 @@ public class AceCommandArgs {
 	
 	/**
 	 * Add key-value pair to map.
-	 * @param argKey
-	 * @param argValue
+	 * @param argKey argKey
+	 * @param argValue argValue
+	 * @return AceCommandArgs
 	 */
 	public native AceCommandArgs with(String argKey, String argValue) /*-{
 		this.@cn.mapway.document.ui.client.component.ace.AceCommandArgs::value[argKey] = argValue;

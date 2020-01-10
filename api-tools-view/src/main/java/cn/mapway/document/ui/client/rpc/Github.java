@@ -42,14 +42,15 @@ public class Github {
     /**
      * 向服务器请求接口调用.
      *
-     * @param <T>      the generic type
      * @param url      the url
      * @param jsonData the json data
+     * @param headers  the headers
      * @param handler  the handler
      * @throws RequestException the request exception
-     * @Param headers
+     * 
      */
-    public <T extends JavaScriptObject> void post(final String url, String jsonData,
+
+     public <T extends JavaScriptObject>  void post(final String url, String jsonData,
                                                   Map<String, String> headers, final IOnData<T> handler) throws RequestException {
 
         RequestBuilder builder =
@@ -82,13 +83,13 @@ public class Github {
     /**
      * 向服务器请求接口调用.
      *
-     * @param <T>     the generic type
      * @param url     the url
+     * @param headers headers
      * @param handler the handler
      * @throws RequestException the request exception
      * @Param headers
      */
-    public <T extends JavaScriptObject> void get(final String url,
+    public <T extends JavaScriptObject>  void get(final String url,
                                                  Map<String, String> headers, final IOnData<T> handler) throws RequestException {
 
         RequestBuilder builder =

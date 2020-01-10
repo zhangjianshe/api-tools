@@ -33,8 +33,8 @@ public class InputHistoryPanel extends Composite implements
     /**
      * 获取历史
      *
-     * @param i
-     * @return
+     * @param i hehe
+     * @return String
      */
     public String get(int i) {
         if (i >= 0 && i < getHistoryCount()) {
@@ -139,7 +139,7 @@ public class InputHistoryPanel extends Composite implements
     /**
      * 历史纪录的个数
      *
-     * @return
+     * @return count
      */
     public int getHistoryCount() {
         return content.getWidgetCount();
