@@ -1,7 +1,5 @@
 package cn.mapway.document.ui.client.rpc;
 
-// TODO: Auto-generated Javadoc
-
 /**
  * The Interface IOnData.
  *

@@ -34,28 +34,24 @@ public class Github {
         return map;
     }
 
-
     native String btoa(String b64) /*-{
-        return btoa(b64);
-    }-*/;
+                                   return btoa(b64);
+                                   }-*/;
 
     /**
      * 向服务器请求接口调用.
-     *
-     * @param url      the url
-     * @param jsonData the json data
-     * @param headers  the headers
-     * @param handler  the handler
-     * @throws RequestException the request exception
      * 
+     * @param <T>      Template
+     * @param url      url
+     * @param jsonData json data
+     * @param headers  headers
+     * @param handler  handler
+     * @throws RequestException the throes
      */
+    public <T extends JavaScriptObject> void post(final String url, String jsonData, Map<String, String> headers,
+            final IOnData<T> handler) throws RequestException {
 
-     public <T extends JavaScriptObject>  void post(final String url, String jsonData,
-                                                  Map<String, String> headers, final IOnData<T> handler) throws RequestException {
-
-        RequestBuilder builder =
-                new RequestBuilder(RequestBuilder.POST,
-                        URL.encode(url));
+        RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, URL.encode(url));
         if (headers != null) {
             for (String key : headers.keySet()) {
                 builder.setHeader(key, headers.get(key));
@@ -82,19 +78,17 @@ public class Github {
 
     /**
      * 向服务器请求接口调用.
-     *
-     * @param url     the url
-     * @param headers headers
-     * @param handler the handler
-     * @throws RequestException the request exception
-     * @Param headers
+     * 
+     * @param <T>
+     * @param url
+     * @param headers
+     * @param handler
+     * @throws RequestException the throes
      */
-    public <T extends JavaScriptObject>  void get(final String url,
-                                                 Map<String, String> headers, final IOnData<T> handler) throws RequestException {
+    public <T extends JavaScriptObject> void get(final String url, Map<String, String> headers,
+            final IOnData<T> handler) throws RequestException {
 
-        RequestBuilder builder =
-                new RequestBuilder(RequestBuilder.GET,
-                        URL.encode(url));
+        RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, URL.encode(url));
         if (headers != null) {
             for (String key : headers.keySet()) {
                 builder.setHeader(key, headers.get(key));

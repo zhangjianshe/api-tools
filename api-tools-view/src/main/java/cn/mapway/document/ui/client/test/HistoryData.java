@@ -1,7 +1,5 @@
 package cn.mapway.document.ui.client.test;
 
-// TODO: Auto-generated Javadoc
-
 /**
  * The Class HistoryData.
  */
