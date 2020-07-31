@@ -6,7 +6,7 @@
     <groupId>cn.mapway</groupId>
     <artifactId>api-tools</artifactId>
     <packaging>pom</packaging>
-    <version>3.0.6</version>
+    <version>3.1.0</version>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
@@ -37,7 +37,6 @@
     <modules>
         <module>api-tools-view</module>
         <module>api-tools-doc</module>
-        <module>api-tools-test</module>
     </modules>
     <profiles>
         <profile>
