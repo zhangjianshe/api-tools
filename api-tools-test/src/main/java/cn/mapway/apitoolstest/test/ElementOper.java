@@ -2,6 +2,7 @@ package cn.mapway.apitoolstest.test;
 
 import cn.mapway.document.annotation.ApiField;
 import cn.mapway.document.annotation.Doc;
+import org.nutz.json.JsonIgnore;
 
 
 /**
@@ -34,4 +35,6 @@ public class ElementOper {
 
     @ApiField(value = "操作参数规则 {1},{2},{3}, {1}为最小值 {2}为最大值 {3}为最小单位",example = "2700,7000")
     public String paramUnitRule;
+
+    public String helloWorld;
 }

@@ -7,6 +7,12 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  */
 @ConfigurationProperties(prefix = "mapway.apidoc")
 public class ApiDocProperties {
+
+
+    /**
+     * 是否允许处理JavaBean中得私有字段，默认值为true 处理私有字段
+     */
+    public Boolean enableParsePrivateField=true;
     /**
      * The Url.
      */
@@ -283,5 +289,21 @@ public class ApiDocProperties {
 
     public void setGit(GitInfo git) {
         this.git = git;
+    }
+
+    /**
+     * 获取是否处理JavaBean中得私有字段
+     * @return
+     */
+    public Boolean getEnableParsePrivateField() {
+        return enableParsePrivateField;
+    }
+
+    /**
+     *  设置是否处理JavaBean中得私有字段
+     * @param enableParsePrivateField
+     */
+    public void setEnableParsePrivateField(Boolean enableParsePrivateField) {
+        this.enableParsePrivateField = enableParsePrivateField;
     }
 }

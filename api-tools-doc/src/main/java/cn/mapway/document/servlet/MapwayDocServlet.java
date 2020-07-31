@@ -95,6 +95,10 @@ public class MapwayDocServlet extends HttpServlet {
      */
     public static final String PARAM_CSS_STYLE = "cssStyle";
     /**
+     * 是否处理JavaBean中得私有字段
+     */
+    public static final String PARAM_ENABLE_PRIVATE_FIELD = "enablePrivateField";
+    /**
      * The Constant serialVersionUID.
      */
     private static final long serialVersionUID = 1L;
@@ -222,7 +226,11 @@ public class MapwayDocServlet extends HttpServlet {
             DocHelper helper = new DocHelper();
             ApiDoc api = helper.toDoc(ParseType.PT_SPRING, context, packageNames);
             json(response, api);
-        } else if (path.startsWith("/javascript")) {
+        } else if (path.equals("/markdown")) {
+            DocHelper helper = new DocHelper();
+            ApiDoc api = helper.toDoc(ParseType.PT_SPRING, context, packageNames);
+            json(response, api);
+        }else if (path.startsWith("/javascript")) {
             String exportName = request.getParameter("apiName");
             if (Strings.isBlank(exportName)) {
                 exportName = "Api";

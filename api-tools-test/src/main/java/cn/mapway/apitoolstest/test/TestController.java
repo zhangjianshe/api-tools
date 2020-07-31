@@ -1,11 +1,15 @@
 package cn.mapway.apitoolstest.test;
 
+import cn.mapway.apitoolstest.test.module.SecReturn;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import cn.mapway.document.annotation.ApiStyle;
 import cn.mapway.document.annotation.Doc;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 /**
  * The Class TestController.
@@ -29,5 +33,19 @@ public class TestController {
     @RequestMapping("/touch")
     public Ret getname(Req req) {
         return new Ret();
+    }
+
+
+
+    @Doc("加密信息")
+    @RequestMapping("/security")
+    public SecReturn secAlg() throws NoSuchAlgorithmException {
+        String ALGORITHM="md-5";
+        MessageDigest md=MessageDigest.getInstance(ALGORITHM);
+        SecReturn r=new SecReturn();
+        r.name=MessageDigest.class.getName();
+
+        r.type=ALGORITHM;
+        return r;
     }
 }

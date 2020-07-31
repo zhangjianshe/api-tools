@@ -67,6 +67,7 @@ public class DocAutoConfigure {
         params.put(MapwayDocServlet.PARAM_LOGO_BASE64, properties.logo);
         params.put(MapwayDocServlet.PARAM_HOME_URL, properties.home);
         params.put(MapwayDocServlet.PARAM_CSS_STYLE, properties.style);
+        params.put(MapwayDocServlet.PARAM_ENABLE_PRIVATE_FIELD, properties.getEnableParsePrivateField().toString());
         srb.setInitParameters(params);
         srb.setLoadOnStartup(1);
         return srb;

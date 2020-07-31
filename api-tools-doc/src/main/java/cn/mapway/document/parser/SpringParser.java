@@ -521,16 +521,27 @@ public class SpringParser {
 
         instance = newInstance(clz);
 
-        for (Field f : clz.getFields()) {
+        StringBuilder ignore=new StringBuilder();
+        ignore.append("^(");
+        for (Field f : getAllFields(clz)) {
             ObjectInfo fld = handleField(instance, f);
             if (fld != null) {
                 p.fields.add(fld);
             }
+            else
+            {
+                if(ignore.length()>2)
+                {
+                    ignore.append("|");
+                }
+                ignore.append(f.getName());
+            }
         }
+        ignore.append(")$");
+        if (instance != null) {
+            p.json = Json.toJson(instance, JsonFormat.full().setLocked(ignore.toString()));
 
-        if (instance != null)
-            p.json = Json.toJson(instance, JsonFormat.full());
-        else {
+        }else {
             p.json = "{}";
         }
         return p;
@@ -549,6 +560,7 @@ public class SpringParser {
     private ObjectInfo handleField(Object instance, Field f)
             throws IllegalArgumentException, IllegalAccessException, InstantiationException {
         deeps.incLevel();
+
 
         ApiField wf = f.getAnnotation(ApiField.class);
         Annotation[] ass = f.getAnnotations();
@@ -709,12 +721,24 @@ public class SpringParser {
             fi.summary = fdoc.desc();
         }
 
-        for (Field f1 : f.getType().getFields()) {
+        for (Field f1 : getAllFields(f.getType())) {
             ObjectInfo o = handleField(cinstance, f1);
             if (o != null) {
                 fi.fields.add(o);
             }
         }
+    }
+
+    public static Field[] getAllFields(Class c){
+
+        List<Field> fieldList = new ArrayList<>();
+        while (c!= null){
+            fieldList.addAll(new ArrayList<>(Arrays.asList(c.getDeclaredFields())));
+            c= c.getSuperclass();
+        }
+        Field[] fields = new Field[fieldList.size()];
+        fieldList.toArray(fields);
+        return fields;
     }
 
     /**
@@ -797,7 +821,6 @@ public class SpringParser {
             throws IllegalAccessException, InstantiationException {
 
         Object cinstance = newInstance(c);
-        Logs.get().debug("create instance " + c.getName() + " is " + Json.toJson(cinstance));
         // 处理 DOc fi.summary;
 
         // 读取List数组中对象的Doc注解
@@ -815,7 +838,7 @@ public class SpringParser {
             list.add(cinstance);
         }
 
-        for (Field f1 : c.getFields()) {
+        for (Field f1 : getAllFields(c)) {
             // 检查是否是循环引用
             ObjectInfo o = handleField(cinstance, f1);
             if (o != null) {

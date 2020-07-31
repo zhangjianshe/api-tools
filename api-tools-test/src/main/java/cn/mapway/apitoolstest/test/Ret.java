@@ -21,4 +21,14 @@ public class Ret {
             @Code(value = "123", desc = "调用成功"),
             @Code(value = "1200", desc = "参数校验失败")})
     public Double d;
+
+
+
+    /**
+     * sads.
+     */
+    @ApiField(value = "这是一个私有字段", example = "Taclek me")
+    private String  privateString;
+
+    private String  anotherPrivateString;
 }

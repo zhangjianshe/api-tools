@@ -28,6 +28,9 @@ public class AppointmentGroupInfo {
     @ApiField(value = "组类型1.点击按钮 2.滑动按钮",example = "1")
     public String groupType;
 
+    public String tomcat;
+
+
     /**
      * 当前对应操作
      */

@@ -2,7 +2,7 @@ package cn.mapway.document.helper;
 
 import java.io.Serializable;
 
-// TODO: Auto-generated Javadoc
+
 
 /**
  * The Class JarInfo.
