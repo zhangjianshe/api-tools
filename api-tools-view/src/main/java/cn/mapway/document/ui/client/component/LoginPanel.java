@@ -70,6 +70,8 @@ public class LoginPanel extends DialogBox implements HasSelectionHandlers<String
      *
      * @param title     标题
      * @param initValue 初始值
+       @param hint ss
+       @return LoginPanel
      */
     public LoginPanel edit(String title, String hint, String initValue) {
         this.setText(title);

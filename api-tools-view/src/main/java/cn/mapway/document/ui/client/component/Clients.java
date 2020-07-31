@@ -24,8 +24,8 @@ public class Clients {
     /**
      * 计算调用的URL
      *
-     * @param e
-     * @return
+     * @param e sf
+     * @return acs
      */
     public static String calculateInvokePath(Entry e) {
         String loc = Window.Location.getHref();

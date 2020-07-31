@@ -69,6 +69,8 @@ public class TextEditor extends DialogBox implements HasSelectionHandlers<String
      *
      * @param title     标题
      * @param initValue 初始值
+     * @param hint Hello
+     * @return textEDitor  d
      */
     public TextEditor edit(String title, String hint, String initValue) {
         this.setText(title);

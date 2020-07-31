@@ -3,8 +3,6 @@ package cn.mapway.document.ui.client.rpc;
 import cn.mapway.document.ui.client.main.storage.LocalStorage;
 import cn.mapway.document.ui.client.test.TestPanel;
 
-// TODO: Auto-generated Javadoc
-
 /**
  * RPC调用的上下文.
  *
