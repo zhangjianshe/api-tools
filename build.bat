@@ -11,6 +11,6 @@ if not defined version (
 
 
 :build
-mvn versions:set -DnewVersion=%version% && mvn versions:commit && mvn  clean deploy -P%pro%
+mvn versions:set -DnewVersion=%version% && mvn versions:commit && mvn  clean package gpg:sign deploy -P%pro%
 
 :exit
