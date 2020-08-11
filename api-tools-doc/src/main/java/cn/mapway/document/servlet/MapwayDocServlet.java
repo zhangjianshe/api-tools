@@ -108,10 +108,6 @@ public class MapwayDocServlet extends HttpServlet {
      */
     private static String localFileName = R.captchaChar(10) + ".data";
     /**
-     * 日志记录器.
-     */
-    private static Log log = Logs.getLog("Mapway-Api-Document");
-    /**
      * 资源报名
      */
     private final String RESOURCE_PACKAGE = "cn.mapway.document.resource";
@@ -196,8 +192,8 @@ public class MapwayDocServlet extends HttpServlet {
         // PathInfo http://www.ennwifi.cn/mapwaydoc/doc/ demo/123
         String pathInfo = request.getPathInfo();
         String servletPath = request.getServletPath();
-        log.info("servlet Path " + servletPath);
-        log.info("path info " + pathInfo);
+        log("servlet Path " + servletPath);
+        log("path info " + pathInfo);
         dispatch(pathInfo, request, response);
 
     }
@@ -388,7 +384,7 @@ public class MapwayDocServlet extends HttpServlet {
      */
     @Override
     public void init() throws ServletException {
-        log.info("文档服务初始化 "+ Version.VERSION+" @"+Version.TIMESTAMP);
+        log("文档服务初始化 "+ Version.VERSION+" @"+Version.TIMESTAMP);
         Enumeration<String> keys;
         keys = this.getInitParameterNames();
         while (keys.hasMoreElements()) {
@@ -429,7 +425,7 @@ public class MapwayDocServlet extends HttpServlet {
      */
     public String getTempFolder() {
         String folder = System.getProperty("java.io.tmpdir");
-        log.info("temporary folder >" + folder);
+        log("temporary folder > " + folder);
         return folder;
     }
 }

@@ -4,8 +4,6 @@ package cn.mapway.document.configure;
 import cn.mapway.document.servlet.MapwayDocServlet;
 import org.nutz.lang.Lang;
 import org.nutz.lang.Strings;
-import org.nutz.log.Log;
-import org.nutz.log.Logs;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -27,8 +25,6 @@ import java.util.Map;
 @EnableConfigurationProperties(ApiDocProperties.class)
 public class DocAutoConfigure {
 
-    private static Log log = Logs.getLog(DocAutoConfigure.class);
-
     /**
      * The Properties.
      */
@@ -39,7 +35,6 @@ public class DocAutoConfigure {
      * Instantiates a new Doc auto configure.
      */
     public DocAutoConfigure() {
-        log.info("AutoConfigure start mapway document api servlet");
     }
 
     /**
