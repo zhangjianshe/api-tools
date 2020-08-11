@@ -4,6 +4,7 @@ import cn.mapway.document.annotation.*;
 import cn.mapway.document.helper.Markdowns;
 import cn.mapway.document.helper.Scans;
 import cn.mapway.document.module.*;
+import cn.mapway.document.resource.Version;
 import org.nutz.castor.Castors;
 import org.nutz.json.Json;
 import org.nutz.json.JsonFormat;
@@ -101,7 +102,7 @@ public class SpringParser {
         if (Strings.isEmpty(doc.apiVersion)) {
             doc.apiVersion = "1.0";
         }
-        doc.copyright = doc.copyright + "-" + CompileVersion.VERSION;
+        doc.copyright = doc.copyright + "-[" + Version.VERSION+"@"+Version.TIMESTAMP+"]";
 
         for (Class<?> clz : clzs) {
             if (clz.getAnnotation(Controller.class) != null || clz.getAnnotation(RestController.class) != null) {

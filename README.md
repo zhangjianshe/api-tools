@@ -43,7 +43,7 @@ build.bat 3.0.6 release 或者 build.sh 3.0.6 release
 <dependency>
     <groupId>cn.mapway</groupId>
     <artifactId>api-tools-doc</artifactId>
-    <version>3.0.7</version>
+    <version>3.2.0</version>
 </dependency>
 ```
 - 配置属性
@@ -53,7 +53,7 @@ mapway:
        enabled: true #开启或者关闭文档
        url: /doc/* #文档访问路径URL
        author: zjs #文档管理员
-       copyright: 新奥泛能  #版权人
+       copyright: mapway.cn  #版权人
        title: CIM模型标准库 #文档标题
        subTitle: CIM LAB  #文档副标题
        scans: cn.enn.cim.api  #扫描的包

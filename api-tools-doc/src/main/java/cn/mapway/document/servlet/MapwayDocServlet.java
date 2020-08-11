@@ -5,6 +5,7 @@ import cn.mapway.document.helper.ParseType;
 import cn.mapway.document.helper.Scans;
 import cn.mapway.document.module.ApiDoc;
 import cn.mapway.document.parser.GenContext;
+import cn.mapway.document.resource.Version;
 import org.nutz.json.Json;
 import org.nutz.lang.Files;
 import org.nutz.lang.Lang;
@@ -387,7 +388,7 @@ public class MapwayDocServlet extends HttpServlet {
      */
     @Override
     public void init() throws ServletException {
-        log.info("文档服务初始化");
+        log.info("文档服务初始化 "+ Version.VERSION+" @"+Version.TIMESTAMP);
         Enumeration<String> keys;
         keys = this.getInitParameterNames();
         while (keys.hasMoreElements()) {

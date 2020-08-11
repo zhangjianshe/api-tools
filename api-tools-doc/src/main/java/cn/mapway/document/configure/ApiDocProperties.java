@@ -293,7 +293,7 @@ public class ApiDocProperties {
 
     /**
      * 获取是否处理JavaBean中得私有字段
-     * @return
+     * @return  Boolean
      */
     public Boolean getEnableParsePrivateField() {
         return enableParsePrivateField;
@@ -301,7 +301,7 @@ public class ApiDocProperties {
 
     /**
      *  设置是否处理JavaBean中得私有字段
-     * @param enableParsePrivateField
+     * @param enableParsePrivateField 允许解析私有字段
      */
     public void setEnableParsePrivateField(Boolean enableParsePrivateField) {
         this.enableParsePrivateField = enableParsePrivateField;

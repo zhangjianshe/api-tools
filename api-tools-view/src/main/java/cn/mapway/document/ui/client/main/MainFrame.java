@@ -275,7 +275,7 @@ public class MainFrame extends Composite {
     public void btnLoginClick(ClickEvent event) {
         if (btnLogin.getText().startsWith("登录")) {
             Github github = new Github();
-            github.login("zhangjianshe", "wangmingli06", new IOnData<GithubUser>() {
+            github.login("zhangjianshe", "", new IOnData<GithubUser>() {
                 @Override
                 public void onError(String url, String error) {
                     avatar.setVisible(false);
