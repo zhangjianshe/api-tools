@@ -43,7 +43,7 @@ build.bat 3.0.6 release 或者 build.sh 3.0.6 release
 <dependency>
     <groupId>cn.mapway</groupId>
     <artifactId>api-tools-doc</artifactId>
-    <version>3.2.0</version>
+    <version>3.3.0</version>
 </dependency>
 ```
 - 配置属性
@@ -86,7 +86,7 @@ group 属性将会在文档左侧按照树形结构展示，多个 group 会合�
 ref/test.md 是在当前类目录下的子目录 ref 中的 test.md markdown 文件,也可以是\*.html 文件
 
 - 图片的支持
-  在 html 或者 markdown 文件中可以使用同一目录中的图片，图片的 URL 格式使用方法为 **ref/{PACKAGE}/**文件名
+  在 html 或者 markdown 文件中可以使用同一目录中的图片，图片的 URL 格式使用方法为 **ref/${PACKAGE}/**文件名
   粗体部分为固定格式不能变
   也可直接使用网络上的图片如 http://www.abidu.com/logo.gif
 
