@@ -12,8 +12,6 @@ import org.nutz.lang.Lang;
 import org.nutz.lang.Streams;
 import org.nutz.lang.Strings;
 import org.nutz.lang.random.R;
-import org.nutz.log.Log;
-import org.nutz.log.Logs;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -212,7 +210,7 @@ public class MapwayDocServlet extends HttpServlet {
         String servletPath = request.getServletPath();
         if (Strings.isBlank(path) || path.equals("/") || path.equals("/index")
                 || path.equals("/index.html")) {
-            genHtml(servletPath,request, response);
+            genHtml(servletPath, request, response);
             return;
         }
         if (path.endsWith("/clear.cache.gif")) {
@@ -227,7 +225,7 @@ public class MapwayDocServlet extends HttpServlet {
             DocHelper helper = new DocHelper();
             ApiDoc api = helper.toDoc(ParseType.PT_SPRING, context, packageNames);
             json(response, api);
-        }else if (path.startsWith("/javascript")) {
+        } else if (path.startsWith("/javascript")) {
             String exportName = request.getParameter("apiName");
             if (Strings.isBlank(exportName)) {
                 exportName = "Api";
@@ -251,16 +249,23 @@ public class MapwayDocServlet extends HttpServlet {
      * 输出文档HTML页面.
      *
      * @param servletPath
-     * @param request  the request
-     * @param response the response
+     * @param request     the request
+     * @param response    the response
      */
     private void genHtml(String servletPath, HttpServletRequest request, HttpServletResponse response) {
 
         File htmlFile = getCacheFileName();
 
-        if (!htmlFile.exists()) {
-            writeToLocal(servletPath,htmlFile);
+        //如果用户强制刷新
+        String force = request.getParameter("force");
+        if ("true".equals(force)) {
+            writeToLocal(servletPath, htmlFile);
         }
+        //第一次调用
+        if (!htmlFile.exists()) {
+            writeToLocal(servletPath, htmlFile);
+        }
+
 
         try {
             response.setCharacterEncoding("UTF-8");
@@ -277,7 +282,7 @@ public class MapwayDocServlet extends HttpServlet {
 
         ApiDoc api = helper.toDoc(ParseType.PT_SPRING, context, packageNames);
 
-        api.servletPath=servletPath;
+        api.servletPath = servletPath;
         // 设置下载目录
 
         String html = helper.genHTML(api);
@@ -384,7 +389,7 @@ public class MapwayDocServlet extends HttpServlet {
      */
     @Override
     public void init() throws ServletException {
-        log("文档服务初始化 "+ Version.VERSION+" @"+Version.TIMESTAMP);
+        log("文档服务初始化 " + Version.VERSION + " @" + Version.TIMESTAMP);
         Enumeration<String> keys;
         keys = this.getInitParameterNames();
         while (keys.hasMoreElements()) {
