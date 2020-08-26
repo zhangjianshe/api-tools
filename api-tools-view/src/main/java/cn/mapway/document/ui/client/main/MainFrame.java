@@ -255,9 +255,11 @@ public class MainFrame extends Composite {
 
         //显示相应的节点
         TreeItem selectedTreeItem = null;
-        String hasTag = Window.Location.getHash();
+        String hasTag = hashTag();
+        GWT.log("init "+hasTag);
         if (hasTag != null || hasTag.trim().length() > 0) {
             selectedTreeItem = apiTree.findItem(hasTag);
+            GWT.log("cnnot find item "+hasTag);
         }
         if (selectedTreeItem == null) {
             selectedTreeItem = apiTree.getItem(0);
@@ -280,6 +282,14 @@ public class MainFrame extends Composite {
 
     }
 
+    public native   String hashTag()/*-{
+        var hash = $wnd.location.hash;
+        if (hash == undefined || hash.length == 0)
+        {
+            return "";
+        }
+        return hash.substr(1);
+    }-*/;
     @UiHandler("btnLogin")
     public void btnLoginClick(ClickEvent event) {
         if (btnLogin.getText().startsWith("登录")) {

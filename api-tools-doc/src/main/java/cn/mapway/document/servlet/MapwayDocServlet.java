@@ -189,9 +189,6 @@ public class MapwayDocServlet extends HttpServlet {
         // |-------- Server-----|--app----|servlet| pathinfo
         // PathInfo http://www.ennwifi.cn/mapwaydoc/doc/ demo/123
         String pathInfo = request.getPathInfo();
-        String servletPath = request.getServletPath();
-        log("servlet Path " + servletPath);
-        log("path info " + pathInfo);
         dispatch(pathInfo, request, response);
 
     }
@@ -207,6 +204,7 @@ public class MapwayDocServlet extends HttpServlet {
      */
     private void dispatch(String path, HttpServletRequest request, HttpServletResponse response)
             throws IOException {
+
         String servletPath = request.getServletPath();
         if (Strings.isBlank(path) || path.equals("/") || path.equals("/index")
                 || path.equals("/index.html")) {

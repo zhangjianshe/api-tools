@@ -132,3 +132,5 @@ hs_err_pid*
 # mvn target
 
 **/target
+*.cache.js
+*.devmode.js

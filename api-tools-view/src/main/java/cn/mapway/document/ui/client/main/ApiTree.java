@@ -7,6 +7,7 @@ import cn.mapway.document.ui.client.module.Group;
 import cn.mapway.document.ui.client.resource.CssStyle;
 import cn.mapway.document.ui.client.resource.SysResource;
 import cn.mapway.document.ui.client.resource.TreeResource;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
@@ -152,26 +153,42 @@ public class ApiTree extends Tree {
         }
     }
 
+    public TreeItem findItem(String hashTag) {
+        for (int i = 0; i < this.getItemCount(); i++) {
+            TreeItem item = this.getItem(i);
+            TreeItem selected = findItem(item, hashTag);
+            if (selected != null) {
+                return selected;
+            }
+        }
+        return null;
+    }
+
     /**
      * 根据hashTag找到树中的结点
      *
      * @param hashTag
      * @return
      */
-    public TreeItem findItem(String hashTag) {
+    public TreeItem findItem(TreeItem node, String hashTag) {
         TreeItem selected = null;
-        for (int i = 0; i < this.getItemCount(); i++) {
-            TreeItem item = this.getItem(i);
-            Entry entry = (Entry) item.getUserObject();
-            if (entry != null) {
-                String url = entry.url();
-                if (url != null && url.endsWith(hashTag)) {
-                    selected = item;
-                    break;
-                }
+        Entry entry = (Entry) node.getUserObject();
+        if (entry != null) {
+            String url = entry.url();
+            GWT.log("compare " + url);
+            if (url != null && url.endsWith(hashTag)) {
+                return node;
             }
         }
-        return selected;
+
+        for (int i = 0; i < node.getChildCount(); i++) {
+            TreeItem item = node.getChild(i);
+            selected = findItem(item, hashTag);
+            if (selected != null) {
+                return selected;
+            }
+        }
+        return null;
     }
 
     /**
