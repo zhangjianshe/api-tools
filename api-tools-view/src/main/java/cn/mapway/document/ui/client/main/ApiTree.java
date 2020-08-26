@@ -1,5 +1,12 @@
 package cn.mapway.document.ui.client.main;
 
+import cn.mapway.document.ui.client.main.storage.LocalStorage;
+import cn.mapway.document.ui.client.module.ApiDoc;
+import cn.mapway.document.ui.client.module.Entry;
+import cn.mapway.document.ui.client.module.Group;
+import cn.mapway.document.ui.client.resource.CssStyle;
+import cn.mapway.document.ui.client.resource.SysResource;
+import cn.mapway.document.ui.client.resource.TreeResource;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
@@ -9,13 +16,6 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Tree;
 import com.google.gwt.user.client.ui.TreeItem;
-import cn.mapway.document.ui.client.main.storage.LocalStorage;
-import cn.mapway.document.ui.client.module.ApiDoc;
-import cn.mapway.document.ui.client.module.Entry;
-import cn.mapway.document.ui.client.module.Group;
-import cn.mapway.document.ui.client.resource.CssStyle;
-import cn.mapway.document.ui.client.resource.SysResource;
-import cn.mapway.document.ui.client.resource.TreeResource;
 
 
 /**
@@ -99,13 +99,14 @@ public class ApiTree extends Tree {
 
         Group group = data.root();
         //不显示最顶级的节点
-        parseGroup(null, group,data);
+        parseGroup(null, group, data);
     }
 
     /**
      * Parses the group.
-     *  @param root  the root
-     * @param group the group
+     *
+     * @param root   the root
+     * @param group  the group
      * @param apiDoc
      */
     private void parseGroup(TreeItem root, Group group, ApiDoc apiDoc) {
@@ -149,6 +150,28 @@ public class ApiTree extends Tree {
         if (root != null) {
             root.setState(isOpen(group.fullName()));
         }
+    }
+
+    /**
+     * 根据hashTag找到树中的结点
+     *
+     * @param hashTag
+     * @return
+     */
+    public TreeItem findItem(String hashTag) {
+        TreeItem selected = null;
+        for (int i = 0; i < this.getItemCount(); i++) {
+            TreeItem item = this.getItem(i);
+            Entry entry = (Entry) item.getUserObject();
+            if (entry != null) {
+                String url = entry.url();
+                if (url != null && url.endsWith(hashTag)) {
+                    selected = item;
+                    break;
+                }
+            }
+        }
+        return selected;
     }
 
     /**

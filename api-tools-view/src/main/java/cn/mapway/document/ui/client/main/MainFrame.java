@@ -1,6 +1,14 @@
 package cn.mapway.document.ui.client.main;
 
+import cn.mapway.document.ui.client.component.CustomButton;
+import cn.mapway.document.ui.client.module.ApiDoc;
+import cn.mapway.document.ui.client.module.Entry;
+import cn.mapway.document.ui.client.module.Group;
+import cn.mapway.document.ui.client.module.JarInfo;
+import cn.mapway.document.ui.client.resource.SysResource;
+import cn.mapway.document.ui.client.rpc.ApiDocProxy;
 import cn.mapway.document.ui.client.rpc.Github;
+import cn.mapway.document.ui.client.rpc.IOnData;
 import cn.mapway.document.ui.client.rpc.github.GithubUser;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JsArray;
@@ -14,14 +22,6 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.*;
-import cn.mapway.document.ui.client.component.CustomButton;
-import cn.mapway.document.ui.client.module.ApiDoc;
-import cn.mapway.document.ui.client.module.Entry;
-import cn.mapway.document.ui.client.module.Group;
-import cn.mapway.document.ui.client.module.JarInfo;
-import cn.mapway.document.ui.client.resource.SysResource;
-import cn.mapway.document.ui.client.rpc.ApiDocProxy;
-import cn.mapway.document.ui.client.rpc.IOnData;
 
 /**
  * The Class MainFrame.
@@ -125,7 +125,6 @@ public class MainFrame extends Composite {
         list.parse(group, "");
         content.scrollToTop();
     }
-
 
 
     /**
@@ -254,7 +253,17 @@ public class MainFrame extends Composite {
             logo.getElement().getStyle().setCursor(Style.Cursor.AUTO);
         }
 
-        handleItem(apiTree.getItem(0));
+        //显示相应的节点
+        TreeItem selectedTreeItem = null;
+        String hasTag = Window.Location.getHash();
+        if (hasTag != null || hasTag.trim().length() > 0) {
+            selectedTreeItem = apiTree.findItem(hasTag);
+        }
+        if (selectedTreeItem == null) {
+            selectedTreeItem = apiTree.getItem(0);
+        }
+
+        handleItem(selectedTreeItem);
 
         if (doc.logo() != null) {
             logo.setUrl(doc.logo());
