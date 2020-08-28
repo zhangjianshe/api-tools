@@ -222,7 +222,8 @@ public class MapwayDocServlet extends HttpServlet {
         } else if (path.equals("/markdown")) {
             DocHelper helper = new DocHelper();
             ApiDoc api = helper.toDoc(ParseType.PT_SPRING, context, packageNames);
-            json(response, api);
+            String markdown = helper.genMarkdown(api);
+            markdown(response, markdown);
         } else if (path.startsWith("/javascript")) {
             String exportName = request.getParameter("apiName");
             if (Strings.isBlank(exportName)) {
@@ -335,6 +336,17 @@ public class MapwayDocServlet extends HttpServlet {
      */
     private void json(HttpServletResponse response, Object data) {
         out(response, Json.toJson(data), "application/json");
+    }
+
+
+    /**
+     * markdown.
+     *
+     * @param response the response
+     * @param data     the data
+     */
+    private void markdown(HttpServletResponse response, String data) {
+        out(response, data, "text/x-markdown; charset=utf-8");
     }
 
     /**

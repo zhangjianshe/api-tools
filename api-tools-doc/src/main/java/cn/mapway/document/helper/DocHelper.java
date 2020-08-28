@@ -1,16 +1,15 @@
 package cn.mapway.document.helper;
 
-import java.io.IOException;
-import java.util.List;
-
+import cn.mapway.document.helper.markdown.ApiDoc2Markdown;
 import cn.mapway.document.module.ApiDoc;
-import org.nutz.json.Json;
-import org.nutz.json.JsonFormat;
-
 import cn.mapway.document.parser.GenContext;
 import cn.mapway.document.parser.SpringParser;
+import org.nutz.json.Json;
+import org.nutz.json.JsonFormat;
 import org.nutz.lang.Strings;
 
+import java.io.IOException;
+import java.util.List;
 
 
 /**
@@ -47,7 +46,8 @@ public class DocHelper {
 
     /**
      * 生成接口文档JSON格式.
-     *  data = data.replaceAll("\\$\\{PACKAGE\\}", pacakgeName);
+     * data = data.replaceAll("\\$\\{PACKAGE\\}", pacakgeName);
+     *
      * @param pt       the pt
      * @param context  the context
      * @param packages the packages
@@ -81,7 +81,19 @@ public class DocHelper {
         return genHTML(doc);
     }
 
-    private final String RESOURCE_PACKAGE="cn.mapway.document.resource";
+    private final String RESOURCE_PACKAGE = "cn.mapway.document.resource";
+
+    /**
+     * 生成 markdown文档
+     *
+     * @param doc
+     * @return
+     */
+    public String genMarkdown(ApiDoc doc) {
+        ApiDoc2Markdown apiDoc2Markdown = new ApiDoc2Markdown();
+        return apiDoc2Markdown.convert(doc);
+    }
+
     /**
      * 生成文档.
      * template
@@ -90,7 +102,7 @@ public class DocHelper {
      * @return the string
      */
     public String genHTML(ApiDoc doc) {
-        String template="";
+        String template = "";
 
         template = Scans.readResource(RESOURCE_PACKAGE, "index.html");
         String ui = Scans.readResource(RESOURCE_PACKAGE, "docui.nocache.js");
