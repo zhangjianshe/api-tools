@@ -2,90 +2,105 @@ package cn.mapway.document.helper.html;
 
 import cn.mapway.document.module.Entry;
 import org.nutz.lang.Lang;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
+import org.nutz.lang.Strings;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class HtmlEntry {
-    Document doc;
-    Element title;
-    Element method;
-    Element url;
-    Element author;
-    Element example;
-    Element root;
-    Element summary;
 
 
-    public HtmlEntry(Document doc) {
-        this.doc = doc;
-        root = div("");
-        title = div("");
-        method = div("");
-        url = div("");
-        author = div("");
-        example = div("");
-        summary = div("");
+    StringBuilder html;
 
-        root.appendChild(title);
-        root.appendChild(summary);
-        root.appendChild(url);
-        root.appendChild(method);
-        root.appendChild(author);
+    public HtmlEntry(Entry entry) {
 
-    }
-
-    Element toElement() {
-        return root;
-    }
-
-    Element div(String value) {
-        Element div = doc.createElement("div");
-        div.setTextContent(value);
-        return div;
-    }
-
-    Element head(int level, String value) {
-        Element div = doc.createElement("h" + level);
-        div.setTextContent(value);
-        return div;
-    }
-
-    public HtmlEntry setEntryName(String name) {
-        this.title.setTextContent(name);
-        return this;
-    }
-
-    public HtmlEntry setUrl(String name) {
-        this.url.setTextContent(name);
-        return this;
-    }
-
-    public HtmlEntry setAuthor(String name) {
-        this.author.setTextContent(name);
-        return this;
-    }
-
-    public HtmlEntry setSummary(String name) {
-        this.summary.setTextContent(name);
-        return this;
+        html = new StringBuilder();
+        parse(entry);
     }
 
     public void parse(Entry entry) {
-        setEntryName(entry.title);
-        if (entry.summary != null) {
-            setSummary(entry.summary);
+        html = new StringBuilder();
+        html.append("<a name='" + entry.url + "'/>");
+        html.append("<h3>" + entry.title + "</h3>");
+        html.append("<div>访问地址：" + entry.url + "</div>");
+        html.append("<div>调用方法：" + Lang.concat(",", entry.invokeMethods) + "</div>");
+
+        if (!Strings.isBlank(entry.summary)) {
+            html.append("<div class='summary'>").append(entry.summary).append("</div>");
         }
-        setUrl(entry.url);
-        setMethod(Lang.concat(',', entry.invokeMethods).toString());
-        setAuthor(entry.author);
+        List<GenInfo> objList = new ArrayList<>();
 
-        HtmlTable response = new HtmlTable();
+        html.append("<div class='input'> <div > 输入参数</div>");
+        ObjTable inputPara = new ObjTable();
+        if (entry.input.size() > 0) {
+            inputPara.parse(entry.input.get(0), objList);
+            html.append(inputPara.toString());
+        }
+        html.append("</div>");
 
-        root.appendChild(response.toElement(doc));
+        html.append("<div class='output'> <div > 输出参数</div>");
+        Outputparam op = new Outputparam();
+        op.parse(entry, objList);
+        html.append(op.toString());
+        html.append("</div>");
 
+        exportAllObject(html, objList);
     }
 
-    private void setMethod(String concat) {
-        method.setTextContent(concat);
+    private void exportAllObject(StringBuilder html, List<GenInfo> gens) {
+        while (needContinue(gens)) {
+            List<GenInfo> gens2 = new ArrayList<GenInfo>();
+            for (GenInfo info : gens) {
+                if (info.gen == false) {
+
+                    ObjTable p = new ObjTable();
+                    p.parse(info.obj, gens2);
+                    html.append(p.toString());
+                    info.gen = true;
+                }
+            }
+            merge(gens, gens2);
+        }
+    }
+
+    /**
+     * Merge.
+     *
+     * @param gens  the gens
+     * @param gens2 the gens 2
+     */
+    private void merge(List<GenInfo> gens, List<GenInfo> gens2) {
+        for (GenInfo info : gens2) {
+            boolean find = false;
+            for (GenInfo gen : gens) {
+                if (gen.type.equals(info.type)) {
+                    find = true;
+                    break;
+                }
+            }
+
+            if (find == false) {
+                gens.add(info);
+            }
+        }
+    }
+
+    /**
+     * Need continue.
+     *
+     * @param gens2 the gens 2
+     * @return true, if successful
+     */
+    private boolean needContinue(List<GenInfo> gens2) {
+        for (GenInfo info : gens2) {
+            if (info.gen == false) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public String toHTML() {
+        return html.toString();
     }
 }

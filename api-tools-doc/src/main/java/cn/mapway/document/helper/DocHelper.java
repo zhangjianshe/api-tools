@@ -1,5 +1,6 @@
 package cn.mapway.document.helper;
 
+import cn.mapway.document.helper.html.ApiDoc2Html;
 import cn.mapway.document.helper.markdown.ApiDoc2Markdown;
 import cn.mapway.document.module.ApiDoc;
 import cn.mapway.document.parser.GenContext;
@@ -92,6 +93,17 @@ public class DocHelper {
     public String genMarkdown(ApiDoc doc) {
         ApiDoc2Markdown apiDoc2Markdown = new ApiDoc2Markdown();
         return apiDoc2Markdown.convert(doc);
+    }
+
+    /**
+     * 生成 html
+     *
+     * @param doc
+     * @return
+     */
+    public String toHTML(ApiDoc doc) {
+        ApiDoc2Html apiDoc2Html = new ApiDoc2Html();
+        return apiDoc2Html.convert(doc);
     }
 
     /**

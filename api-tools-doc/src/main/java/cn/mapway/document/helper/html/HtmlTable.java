@@ -1,85 +1,81 @@
 package cn.mapway.document.helper.html;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
+import org.nutz.lang.Strings;
 
 import java.util.ArrayList;
-import java.util.List;
 
-public class HtmlTable {
+public abstract class HtmlTable {
 
-    private String title;
-    private String summary;
+    ArrayList<ArrayList<Cell>> table;
 
     public HtmlTable() {
-        headers = new ArrayList<>();
-        rows = new ArrayList<>();
+        table = new ArrayList<>();
     }
 
-    List<String> headers;
-    List<List<String>> rows;
-
-    public HtmlTable setTitle(String title) {
-        this.title = title;
-        return this;
-    }
-
-    public HtmlTable setSummary(String summary) {
-        this.summary = summary;
-        return this;
-    }
-
-    public void appendHeader(String... header) {
-        for (int i = 0; i < header.length; i++) {
-            headers.add(header[i]);
+    protected void setCellAttr(int row, int col, int rowspan, int colspan, String text, String css) {
+        Cell cell = table.get(row).get(col);
+        cell.colspan = colspan;
+        cell.rowspan = rowspan;
+        cell.text = text;
+        if (!Strings.isBlank(css)) {
+            cell.css = css;
         }
     }
 
-    public void addRow(String... text) {
-        ArrayList<String> row = new ArrayList<>();
-        for (int i = 0; i < text.length; i++) {
-            row.add(text[i]);
-        }
-        rows.add(row);
-    }
-
-    Element div(Document doc, String value) {
-        Element div = doc.createElement("div");
-        div.setTextContent(value);
-        return div;
-    }
-
-    public Element toElement(Document doc) {
-
-        Element table = doc.createElement("table");
-        Element th = doc.createElement("tr");
-        Element title = doc.createElement("td");
-        th.appendChild(div(doc, this.title));
-        th.appendChild(div(doc, this.summary));
-        title.setAttribute("colspan", "5");
-
-        table.appendChild(th);
-        th = doc.createElement("th");
-
-
-        for (int i = 0; i < headers.size(); i++) {
-            Element td = doc.createElement("td");
-            td.setNodeValue(headers.get(i));
-            th.appendChild(td);
-        }
-        table.appendChild(th);
-
-
-        for (int i = 0; i < rows.size(); i++) {
-            List<String> row = rows.get(i);
-            Element tr = doc.createElement("tr");
-            for (int j = 0; j < row.size(); j++) {
-                Element td = doc.createElement("td");
-                td.setNodeValue(row.get(j));
-                tr.appendChild(td);
+    protected void initTable(int row, int col) {
+        table = new ArrayList<>();
+        for (int i = 0; i < row + 1; i++) {
+            ArrayList<Cell> rows = new ArrayList<>(col);
+            for (int j = 0; j < col; j++) {
+                rows.add(new Cell());
             }
-            table.appendChild(tr);
+            table.add(rows);
         }
-        return table;
+    }
+
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("<table border='1' cellpadding='5px' cellspacing='1px' style='border-color:#f0f0f0;border-collapse:collapse;' >");
+        for (int i = 0; i < table.size(); i++) {
+            ArrayList<Cell> row = table.get(i);
+
+            sb.append("<tr>");
+
+            for (int j = 0; j < row.size(); j++) {
+                Cell cell = row.get(j);
+                if (j < getLevel()) {
+                    if (cell.text != null) {
+                        String style = findStyle(cell.css);
+
+                        sb.append("<td " + style + " colspan='" + cell.colspan + "' rowspan='" + cell.rowspan + "'>").append(cell.text).append("</td>");
+                    }
+                } else {
+                    if (cell.text != null) {
+                        String style = findStyle(cell.css);
+                        sb.append("<td " + style + "colspan='" + cell.colspan + "' rowspan='" + cell.rowspan + "'>").append(cell.text).append("</td>");
+                    }
+                }
+            }
+
+            sb.append("</tr>");
+
+        }
+        sb.append("</table>");
+        return sb.toString();
+    }
+
+    /**
+     * 获取目录的列数
+     *
+     * @return
+     */
+    public abstract int getLevel();
+
+    private String findStyle(String css) {
+        if (Strings.isBlank(css)) {
+            return "";
+        } else {
+            return "class=\"" + css + "\"";
+        }
     }
 }

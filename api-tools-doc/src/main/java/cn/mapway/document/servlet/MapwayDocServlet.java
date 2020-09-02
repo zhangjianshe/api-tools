@@ -224,6 +224,12 @@ public class MapwayDocServlet extends HttpServlet {
             ApiDoc api = helper.toDoc(ParseType.PT_SPRING, context, packageNames);
             String markdown = helper.genMarkdown(api);
             markdown(response, markdown);
+        } else if (path.equals("/html")) {
+            DocHelper helper = new DocHelper();
+            ApiDoc api = helper.toDoc(ParseType.PT_SPRING, context, packageNames);
+            String html = helper.toHTML(api);
+            System.out.println(html);
+            html(response, html);
         } else if (path.startsWith("/javascript")) {
             String exportName = request.getParameter("apiName");
             if (Strings.isBlank(exportName)) {

@@ -18,8 +18,6 @@ import cn.mapway.document.ui.client.resource.SysResource;
 import java.util.List;
 import java.util.Map;
 
-// TODO: Auto-generated Javadoc
-
 /**
  * The Class ObjectInfoPanel.
  */
