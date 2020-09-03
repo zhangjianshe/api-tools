@@ -48,7 +48,10 @@
             font-size: 22px;
             padding-left: 10px;
         }
-    </ui:style>
+
+        .link {
+            color: skyblue;
+        }</ui:style>
     <g:DockLayoutPanel ui:field="root">
         <g:north size="70">
 
@@ -69,9 +72,11 @@
                 <g:cell horizontalAlignment="right">
                     <g:HorizontalPanel ui:field="tools"
                                        verticalAlignment="middle" spacing="5">
+                        <g:Anchor ui:field="linkSinglePage" styleName="{style.link}" target="single_page">单页文档
+                        </g:Anchor>
                         <g:Image width="30px" height="30px" ui:field="avatar" visible="false"></g:Image>
                         <g:Label ui:field="btnLogin" visible="false" styleName="{style.login}">登录Github账号</g:Label>
-                        <g:Label ui:field="apiVersion" styleName="{style.version}"></g:Label>
+                        <g:Label ui:field="apiVersion" visible="false" styleName="{style.version}"></g:Label>
                     </g:HorizontalPanel>
                 </g:cell>
             </g:HorizontalPanel>

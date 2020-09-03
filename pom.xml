@@ -6,15 +6,15 @@
     <groupId>cn.mapway</groupId>
     <artifactId>api-tools</artifactId>
     <packaging>pom</packaging>
-    <version>3.7.0</version>
+    <version>3.8.0</version>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
         <java.version>1.8</java.version>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-      <gpg.keyname>1F8B2CB0A3E469D2</gpg.keyname>
-<!--        <gpg.keyname>8F43F628BFCC2B9A</gpg.keyname>-->
+        <gpg.keyname>1F8B2CB0A3E469D2</gpg.keyname>
+        <!--        <gpg.keyname>8F43F628BFCC2B9A</gpg.keyname>-->
     </properties>
     <name>api-tools</name>
     <description>auto gen doc from api with ui</description>
@@ -37,6 +37,7 @@
     </developers>
     <modules>
         <module>api-tools-view</module>
+        <module>api-tools-test</module>
         <module>api-tools-doc</module>
     </modules>
     <build>
@@ -49,40 +50,28 @@
                 <configuration>
                     <serverId>sonatype_oss</serverId>
                     <nexusUrl>https://oss.sonatype.org/</nexusUrl>
-                  </configuration>
-                 
-              </plugin>
-              <plugin>
+                </configuration>
+
+            </plugin>
+            <plugin>
                 <artifactId>maven-deploy-plugin</artifactId>
                 <configuration>
-                  <skip>true</skip>
+                    <skip>true</skip>
                 </configuration>
-              </plugin>
-              <plugin>
+            </plugin>
+            <plugin>
                 <artifactId>maven-source-plugin</artifactId>
                 <executions>
-                  <execution>
-                    <id>package-sources</id>
-                    <goals>
-                      <goal>jar</goal>
-                    </goals>
-                  </execution>
+                    <execution>
+                        <id>package-sources</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
                 </executions>
-              </plugin>
-              <plugin>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <executions>
-                  <execution>
-                    <id>package-javadoc</id>
-                    <phase>package</phase>
-                    <goals>
-                      <goal>jar</goal>
-                    </goals>
-                  </execution>
-                </executions>
-              </plugin>
-             
-        
+            </plugin>
+
+
             <!-- GPG -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -122,7 +111,7 @@
             <build>
                 <pluginManagement>
                     <plugins>
-                       
+
                     </plugins>
                 </pluginManagement>
             </build>

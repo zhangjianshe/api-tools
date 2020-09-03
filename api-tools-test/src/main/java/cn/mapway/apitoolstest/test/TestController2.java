@@ -3,6 +3,7 @@ package cn.mapway.apitoolstest.test;
 import org.springframework.stereotype.Controller;
 
 import cn.mapway.document.annotation.Doc;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -23,7 +24,7 @@ public class TestController2 {
      */
     @Doc(value = "touch3", group = "/Style", tags = {"测试", "文明"},refs = {"ref/hello.md"})
     @RequestMapping("/touch3")
-    public Ret getname3(Req req) {
+    public Ret getname3(@RequestBody  Req req) {
         return new Ret();
     }
 
@@ -35,7 +36,7 @@ public class TestController2 {
      */
     @Doc(value = "touch4", group = "/Css")
     @RequestMapping("/touch4")
-    public Ret getname456(Req req) {
+    public Ret getname456(@RequestBody Req req) {
         return new Ret();
     }
 }

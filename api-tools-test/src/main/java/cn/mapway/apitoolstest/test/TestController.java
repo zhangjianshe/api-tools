@@ -2,6 +2,7 @@ package cn.mapway.apitoolstest.test;
 
 import cn.mapway.apitoolstest.test.module.SecReturn;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import cn.mapway.document.annotation.ApiStyle;
@@ -31,7 +32,7 @@ public class TestController {
             style = ApiStyle.IMPORTANT,
             desc = "我们的意图是明确的，将返回的多个Person实体对象放到一个Map结构中。但是问题就在于返回的JSON中的keys是不固定的(比如上述JSON中的keys是人名)，这导致反序列化失败。毕竟默认配置下的ObjectMapper也没有聪明到这种程度，能够猜测你是想要将多个实体放到Map中。")
     @RequestMapping("/touch")
-    public Ret getname(Req req) {
+    public Ret getname(@RequestBody Req req) {
         return new Ret();
     }
 

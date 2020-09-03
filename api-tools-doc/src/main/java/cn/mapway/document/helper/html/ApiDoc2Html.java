@@ -4,12 +4,15 @@ import cn.mapway.document.module.ApiDoc;
 import cn.mapway.document.module.Entry;
 import cn.mapway.document.module.Group;
 
+import java.util.logging.Logger;
+
 
 /**
  * ApiDoc 转 Html
  */
 public class ApiDoc2Html {
 
+    private static Logger logger = Logger.getLogger(ApiDoc2Html.class.toGenericString());
 
     public ApiDoc2Html() {
 
@@ -29,7 +32,7 @@ public class ApiDoc2Html {
         html.append("<head>");
         html.append("<style>");
         html.append(" .b{font-weight:bold;}");
-        html.append(" .summary{color:green;padding:10px;border:solid 1px #f0f0f0;}");
+        html.append(" .summary{color:green;padding:10px;border:solid 1px #f0f0f0;font-size:small;}");
         html.append(" .input{padding:10px;border-left:solid 3px red;}");
         html.append(" .output{padding:10px;border-left:solid 3px skyblue;}");
 
@@ -50,6 +53,7 @@ public class ApiDoc2Html {
 
     private void exportEntry(StringBuilder html, Group root) {
         for (Entry entry : root.entries) {
+            logger.info("===>export entry input size " + entry.input.size());
             HtmlEntry htmlEntry = new HtmlEntry(entry);
             html.append(htmlEntry.toHTML());
         }

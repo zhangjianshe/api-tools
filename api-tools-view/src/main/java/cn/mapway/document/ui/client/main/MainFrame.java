@@ -225,6 +225,7 @@ public class MainFrame extends Composite {
      */
     void parseData(final ApiDoc doc) {
         this.doc = doc;
+        linkSinglePage.setHref("/html");
 
         JsArray<JarInfo> jars = doc.getDownloads();
 
@@ -256,10 +257,10 @@ public class MainFrame extends Composite {
         //显示相应的节点
         TreeItem selectedTreeItem = null;
         String hasTag = hashTag();
-        GWT.log("init "+hasTag);
+        GWT.log("init " + hasTag);
         if (hasTag != null || hasTag.trim().length() > 0) {
             selectedTreeItem = apiTree.findItem(hasTag);
-            GWT.log("cnnot find item "+hasTag);
+            GWT.log("cnnot find item " + hasTag);
         }
         if (selectedTreeItem == null) {
             selectedTreeItem = apiTree.getItem(0);
@@ -280,16 +281,17 @@ public class MainFrame extends Composite {
             lbCopy.setHTML("&copy; " + doc.copyright());
         }
 
+
     }
 
-    public native   String hashTag()/*-{
+    public native String hashTag()/*-{
         var hash = $wnd.location.hash;
-        if (hash == undefined || hash.length == 0)
-        {
+        if (hash == undefined || hash.length == 0) {
             return "";
         }
         return hash.substr(1);
     }-*/;
+
     @UiHandler("btnLogin")
     public void btnLoginClick(ClickEvent event) {
         if (btnLogin.getText().startsWith("登录")) {
@@ -313,6 +315,7 @@ public class MainFrame extends Composite {
             btnLogin.setText("登录Github账号");
         }
     }
+
 
     /**
      * The Api version.
@@ -383,5 +386,7 @@ public class MainFrame extends Composite {
     Image avatar;
     @UiField
     Label btnLogin;
+    @UiField
+    Anchor linkSinglePage;
 
 }

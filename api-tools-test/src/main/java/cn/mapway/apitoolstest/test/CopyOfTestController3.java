@@ -2,9 +2,9 @@ package cn.mapway.apitoolstest.test;
 
 import cn.mapway.document.annotation.Doc;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
 
 /**
  * The Class CopyOfTestController3.
@@ -18,7 +18,7 @@ public class CopyOfTestController3 {
     @Doc(value = "测试retClazz注解", retClazz = GetOperInfoByProdTypeIdResp.class)
     @RequestMapping(value = "/testretval")
     @ResponseBody
-    public String testRetValue(Req req) {
+    public String testRetValue(@RequestBody Req req) {
         return "{'hello':'ssas'}";
     }
 
