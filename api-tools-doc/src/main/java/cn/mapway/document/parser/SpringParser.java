@@ -79,9 +79,23 @@ public class SpringParser {
         if (packageNames.length == 0) {
             return new ApiDoc();
         }
-        ArrayList<Class<?>> clzs = new ArrayList<Class<?>>();
+
+
+        List<String> packageList = new ArrayList<>();
 
         for (String pk : packageNames) {
+            String[] pks = Strings.split(pk, false, false, ',', ';');
+            for (int i = 0; i < pks.length; i++) {
+                String s = pks[i];
+                s = Strings.trim(s);
+                if (!Strings.isBlank(s)) {
+                    packageList.add(s);
+                }
+            }
+        }
+
+        ArrayList<Class<?>> clzs = new ArrayList<Class<?>>();
+        for (String pk : packageList) {
             Set<Class<?>> clz = scanPackage(pk);
             clzs.addAll(clz);
         }
@@ -102,7 +116,7 @@ public class SpringParser {
         if (Strings.isEmpty(doc.apiVersion)) {
             doc.apiVersion = "1.0";
         }
-        doc.copyright = doc.copyright + "-[" + Version.VERSION+"@"+Version.TIMESTAMP+"]";
+        doc.copyright = doc.copyright + "-[" + Version.VERSION + "@" + Version.TIMESTAMP + "]";
 
         for (Class<?> clz : clzs) {
             if (clz.getAnnotation(Controller.class) != null || clz.getAnnotation(RestController.class) != null) {
@@ -522,17 +536,14 @@ public class SpringParser {
 
         instance = newInstance(clz);
 
-        StringBuilder ignore=new StringBuilder();
+        StringBuilder ignore = new StringBuilder();
         ignore.append("^(");
         for (Field f : getAllFields(clz)) {
             ObjectInfo fld = handleField(instance, f);
             if (fld != null) {
                 p.fields.add(fld);
-            }
-            else
-            {
-                if(ignore.length()>2)
-                {
+            } else {
+                if (ignore.length() > 2) {
                     ignore.append("|");
                 }
                 ignore.append(f.getName());
@@ -542,7 +553,7 @@ public class SpringParser {
         if (instance != null) {
             p.json = Json.toJson(instance, JsonFormat.full().setLocked(ignore.toString()));
 
-        }else {
+        } else {
             p.json = "{}";
         }
         return p;
@@ -730,12 +741,12 @@ public class SpringParser {
         }
     }
 
-    public static Field[] getAllFields(Class c){
+    public static Field[] getAllFields(Class c) {
 
         List<Field> fieldList = new ArrayList<>();
-        while (c!= null){
+        while (c != null) {
             fieldList.addAll(new ArrayList<>(Arrays.asList(c.getDeclaredFields())));
-            c= c.getSuperclass();
+            c = c.getSuperclass();
         }
         Field[] fields = new Field[fieldList.size()];
         fieldList.toArray(fields);

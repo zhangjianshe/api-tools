@@ -28,7 +28,7 @@
         <dependency>
             <groupId>cn.mapway</groupId>
             <artifactId>api-tools-doc</artifactId>
-            <version>3.8.0</version>
+            <version>3.10.0</version>
             <scope>compile</scope>
         </dependency>
 

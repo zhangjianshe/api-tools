@@ -225,7 +225,7 @@ public class MainFrame extends Composite {
      */
     void parseData(final ApiDoc doc) {
         this.doc = doc;
-        linkSinglePage.setHref("/html");
+        linkSinglePage.setHref("html");
 
         JsArray<JarInfo> jars = doc.getDownloads();
 
