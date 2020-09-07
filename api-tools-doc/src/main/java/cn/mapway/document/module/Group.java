@@ -143,10 +143,11 @@ public class Group implements Serializable {
      */
     public void sort() {
 
+        //Group is sorted by name.
         Collections.sort(subGroups, new Comparator<Group>() {
 
             public int compare(Group o1, Group o2) {
-                return o1.order > o2.order ? 1 : -1;
+                return o1.name.compareToIgnoreCase(o2.name);
             }
         });
 

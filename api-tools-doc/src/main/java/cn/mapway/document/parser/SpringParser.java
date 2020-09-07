@@ -118,8 +118,21 @@ public class SpringParser {
         }
         doc.copyright = doc.copyright + "-[" + Version.VERSION + "@" + Version.TIMESTAMP + "]";
 
+        boolean hasRestController = false;
+        try {
+            Class.forName("org.springframework.web.bind.annotation.RestController");
+            hasRestController = true;
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+            hasRestController = false;
+        }
+
         for (Class<?> clz : clzs) {
-            if (clz.getAnnotation(Controller.class) != null || clz.getAnnotation(RestController.class) != null) {
+            boolean isParseRestController =
+                    hasRestController ?
+                            (clz.getAnnotation(RestController.class) != null)
+                            : false;
+            if (clz.getAnnotation(Controller.class) != null || isParseRestController) {
                 parseClass(doc, clz);
             }
 
