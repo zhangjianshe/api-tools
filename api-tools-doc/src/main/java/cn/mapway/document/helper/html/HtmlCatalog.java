@@ -4,7 +4,6 @@ package cn.mapway.document.helper.html;
 import cn.mapway.document.module.Entry;
 import cn.mapway.document.module.Group;
 import org.nutz.lang.Lang;
-import org.nutz.lang.Strings;
 
 public class HtmlCatalog extends HtmlTable {
 
@@ -18,7 +17,7 @@ public class HtmlCatalog extends HtmlTable {
         catalogLevel = catalogLevel(group);
         totalCount = total(group);
 
-        initTable(totalCount, catalogLevel + 5);
+        initTable(totalCount, catalogLevel + 6);
         fillHeader();
         index = 1;
         fillData(1, 0, group);
@@ -29,12 +28,12 @@ public class HtmlCatalog extends HtmlTable {
         setCellAttr(0, 0, 1, catalogLevel, "分类", "b");
         setCellAttr(0, catalogLevel, 1, 1, "序号", "b");
         setCellAttr(0, catalogLevel + 1, 1, 1, "名称", "b");
-        setCellAttr(0, catalogLevel + 2, 1, 1, "作者", "b");
-        setCellAttr(0, catalogLevel + 3, 1, 1, "状态", "b");
-        setCellAttr(0, catalogLevel + 4, 1, 1, "标签", "b");
+        setCellAttr(0, catalogLevel + 2, 1, 1, "URI", "b");
+        setCellAttr(0, catalogLevel + 3, 1, 1, "作者", "b");
+        setCellAttr(0, catalogLevel + 4, 1, 1, "状态", "b");
+        setCellAttr(0, catalogLevel + 5, 1, 1, "标签", "b");
 
     }
-
 
 
     int index = 0;
@@ -59,6 +58,7 @@ public class HtmlCatalog extends HtmlTable {
             entryCol = catalogLevel;
             setCellAttr(entryRow, entryCol++, 1, 1, (index++) + "", "");
             setCellAttr(entryRow, entryCol++, 1, 1, "<a href='#" + entry.url + "'>" + entry.title + "</a>", "");
+            setCellAttr(entryRow, entryCol++, 1, 1, entry.url, "");
             setCellAttr(entryRow, entryCol++, 1, 1, entry.author, "");
             setCellAttr(entryRow, entryCol++, 1, 1, entry.state, "");
             setCellAttr(entryRow, entryCol++, 1, 1, entry.tags.size() > 0 ? Lang.concat(",", entry.tags).toString() : "&nbsp;", "");
