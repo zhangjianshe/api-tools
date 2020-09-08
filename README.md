@@ -66,6 +66,40 @@ mapway:
 
 可以在 Web.xml 文件中直接配置 Servlet cn.mapway.document.servlet.MapwayDocServlet,Servlet 参数可以参见上面的内容
 
+```xml
+ <!-- document-->
+    <servlet>
+        <servlet-name>api-documents</servlet-name>
+        <servlet-class>cn.mapway.document.servlet.MapwayDocServlet</servlet-class>
+        <init-param>
+            <param-name>author</param-name>
+            <param-value>zhangjianshe</param-value>
+        </init-param>
+        <init-param>
+            <param-name>title</param-name>
+            <param-value>家装设计文档</param-value>
+        </init-param>
+        <init-param>
+            <param-name>subtitle</param-name>
+            <param-value>HDDP-DESIGN</param-value>
+        </init-param>
+        <init-param>
+            <param-name>scanPackages</param-name>
+            <param-value>com.ziroom.zrpd.design</param-value>
+        </init-param>
+        <init-param>
+            <param-name>copyright</param-name>
+            <param-value>&amp;copy;2020 hddp-design</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>api-documents</servlet-name>
+        <url-pattern>/doc/*</url-pattern>
+    </servlet-mapping>
+    <!-- end document-->
+```
+
 - 编写文档
   在 Controller 类中添加 @Doc 注解
   在 Controller 的方法中添加 @Doc 注解
