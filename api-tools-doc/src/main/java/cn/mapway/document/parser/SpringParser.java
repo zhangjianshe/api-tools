@@ -93,7 +93,7 @@ public class SpringParser {
                 }
             }
         }
-
+        log.info("scan package:" + Json.toJson(packageList));
         ArrayList<Class<?>> clzs = new ArrayList<Class<?>>();
         for (String pk : packageList) {
             Set<Class<?>> clz = scanPackage(pk);
