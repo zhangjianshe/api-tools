@@ -123,7 +123,7 @@ public class SpringParser {
             Class.forName("org.springframework.web.bind.annotation.RestController");
             hasRestController = true;
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+            log.warn("doc-api is running in a container which does not support SPRING Rest Controller");
             hasRestController = false;
         }
 
