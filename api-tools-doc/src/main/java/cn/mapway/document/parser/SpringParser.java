@@ -12,6 +12,7 @@ import org.nutz.lang.Files;
 import org.nutz.lang.Lang;
 import org.nutz.lang.Mirror;
 import org.nutz.lang.Strings;
+import org.nutz.lang.born.BorningException;
 import org.nutz.log.Logs;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -358,8 +359,12 @@ public class SpringParser {
                     }
                 }
 
-                ObjectInfo p = handleParameter(clz, name);
-
+                ObjectInfo p = null;
+                try {
+                    p = handleParameter(clz, name);
+                } catch (Exception exc) {
+                    log.warn("handle exception " + exc.toString());
+                }
                 if (p == null) {
                     continue;
                 }
@@ -399,7 +404,7 @@ public class SpringParser {
                 } else if (queryVariable != null) {
                     p.name = queryVariable.value();
                     e.queryParas.add(p);
-                } else if (isRequestBody != null) {
+                } else if (isRequestBody != null || paraDoc != null) {
 
                     e.input.add(p);
                 }
@@ -412,6 +417,7 @@ public class SpringParser {
         ApiField returnDoc = m.getAnnotation(ApiField.class);
 
         e.output = handleParameter(out, "out");
+
         if (returnDoc != null) {
             // 类型 解释 例子
             if (returnDoc.example() != null && returnDoc.example().length() > 0) {
@@ -584,6 +590,9 @@ public class SpringParser {
      */
     private ObjectInfo handleField(Object instance, Field f)
             throws IllegalArgumentException, IllegalAccessException, InstantiationException {
+        if (instance == null) {
+            return null;
+        }
         deeps.incLevel();
 
 
@@ -667,8 +676,9 @@ public class SpringParser {
                 } else {
                     c = (Class<?>) type;
                 }
-
-                f.set(instance, list);
+                if (instance != null) {
+                    f.set(instance, list);
+                }
                 fi.type = new StringBuilder().append("List<").append(type.getTypeName()).append(">").toString();
 
                 if (isMap(type.getClass())) {
@@ -682,8 +692,11 @@ public class SpringParser {
                     tackleListObject(fi, list, c);
                 }
             } else if (isGeneric(f.getType())) {
-                tackleGenericType(instance, f, fi);
-
+                if (instance != null) {
+                    tackleGenericType(instance, f, fi);
+                }
+            } else if (f.getType().isInterface()) {
+                //这是一个接口 不做处理
             } else {
                 // 该字段是一个对象类，循环处理此类
                 int count = deeps.getPreLevelCount(f.getType().getName(), deeps.getLevel());
@@ -692,8 +705,9 @@ public class SpringParser {
                     deeps.decLevel();
                     return null;
                 }
-
-                tackleObject(instance, f, fi);
+                if (instance != null) {
+                    tackleObject(instance, f, fi);
+                }
             }
 
             deeps.decLevel();
@@ -740,10 +754,12 @@ public class SpringParser {
         cinstance = newInstance(f.getType());
         f.set(instance, cinstance);
 
-        // 读取List数组中对象的Doc注解
-        Doc fdoc = cinstance.getClass().getAnnotation(Doc.class);
-        if (fdoc != null) {
-            fi.summary = fdoc.desc();
+        if (cinstance != null) {
+            // 读取List数组中对象的Doc注解
+            Doc fdoc = cinstance.getClass().getAnnotation(Doc.class);
+            if (fdoc != null) {
+                fi.summary = fdoc.desc();
+            }
         }
 
         for (Field f1 : getAllFields(f.getType())) {
@@ -846,8 +862,9 @@ public class SpringParser {
             throws IllegalAccessException, InstantiationException {
 
         Object cinstance = newInstance(c);
-        // 处理 DOc fi.summary;
-
+        if (cinstance == null) {
+            return;
+        }
         // 读取List数组中对象的Doc注解
         Doc fdoc = c.getAnnotation(Doc.class);
         if (fdoc != null) {
@@ -930,8 +947,16 @@ public class SpringParser {
             return b;
         } else if (m.isLong()) {
             return new Long(0l);
-        } else
-            return m.born();
+        } else {
+            Object obj = null;
+            try {
+                obj = m.born();
+            } catch (BorningException e) {
+                log.warn("cnnot initialize object " + e.getMessage());
+                obj = null;
+            }
+            return obj;
+        }
     }
 
     /**
