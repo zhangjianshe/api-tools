@@ -433,6 +433,30 @@ public class SpringParser {
     }
 
     /**
+     * 将枚举值输出到文档中
+     *
+     * @param fi
+     * @param enums
+     * @return
+     */
+    private void parseCodes(ObjectInfo fi, Class<?>[] enums) {
+        //只处理枚举类型值
+        if (enums == null) {
+            return;
+        }
+        for (Class<?> clz : enums) {
+            if (clz.isEnum()) {
+                Object[] enumConstants = clz.getEnumConstants();
+                StringBuilder sb = new StringBuilder();
+
+                for (Object obj : enumConstants) {
+                    fi.codes.add(new FieldCode("", obj.toString()));
+                }
+            }
+        }
+    }
+
+    /**
      * 解析ref html.
      *
      * @param refs
@@ -615,6 +639,8 @@ public class SpringParser {
                     fi.codes.add(fc);
                 }
             }
+            //处理引用枚举值
+            parseCodes(fi, wf.codes());
 
             // 处理字段约束
             Size stringConstrain = null;
