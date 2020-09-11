@@ -245,8 +245,8 @@ public class SpringParser {
     private Entry handleMethod(Class<?> clsType, ApiDoc document, String group_base_path, Method m)
             throws IllegalArgumentException, IllegalAccessException, InstantiationException {
         // 如果没有添加注解 就不输出这个接口的文档
-        Doc summary = m.getAnnotation(Doc.class);
-        if (null == summary) {
+        Doc docAnnotation = m.getAnnotation(Doc.class);
+        if (null == docAnnotation) {
             return null;
         }
         Entry e = new Entry();
@@ -284,24 +284,27 @@ public class SpringParser {
         e.methodName = m.getName();
 
         Class retClz = null;
+        boolean isReturnList = false;
 
-
-        if (summary != null) {
-            e.title = summary.value();
-            e.summary = summary.desc() == null ? "" : summary.desc();
-            e.summary += parseRef(clsType, summary.refs());
-            e.order = summary.order();
-            e.author = summary.author();
-            e.state = transState(summary.state());
-            e.apiStyle = transApiStyle(summary.style());
+        if (docAnnotation != null) {
+            e.title = docAnnotation.value();
+            e.summary = docAnnotation.desc() == null ? "" : docAnnotation.desc();
+            e.summary += parseRef(clsType, docAnnotation.refs());
+            e.order = docAnnotation.order();
+            e.author = docAnnotation.author();
+            e.state = transState(docAnnotation.state());
+            e.apiStyle = transApiStyle(docAnnotation.style());
             // 处理方法的标签.
-            if (summary.tags() != null) {
-                for (String tag : summary.tags()) {
+            if (docAnnotation.tags() != null) {
+                for (String tag : docAnnotation.tags()) {
                     e.tags.add(tag);
                 }
             }
-            if (summary.retClazz() != null && summary.retClazz().length > 0) {
-                retClz = summary.retClazz()[0];
+            if (docAnnotation.retClazz() != null && docAnnotation.retClazz().length > 0) {
+                retClz = docAnnotation.retClazz()[0];
+            }
+            if (docAnnotation.isReturnList() != null && docAnnotation.isReturnList().length > 0) {
+                isReturnList = docAnnotation.isReturnList()[0];
             }
         }
 
@@ -309,9 +312,6 @@ public class SpringParser {
 
         Class<?> out = (Class<?>) m.getReturnType();
 
-        if (retClz != null) {
-            out = retClz;
-        }
 
         int i = 0;
         for (Class<?> clz : ps) {
@@ -416,7 +416,27 @@ public class SpringParser {
         // 处理返回值注解
         ApiField returnDoc = m.getAnnotation(ApiField.class);
 
+
         e.output = handleParameter(out, "out");
+        if (retClz != null) {//返回值是一个模板类
+            Map<Integer, ObjectInfo> replaceList = new HashMap<>();
+            for (int j = 0; j < e.output.fields.size(); j++) {
+                ObjectInfo f = e.output.fields.get(j);
+                if (f.type.equals("Object")) {
+                    ObjectInfo replaceObjectInfo = handleParameter(retClz, f.name);
+                    replaceList.put(j, replaceObjectInfo);
+                }
+            }
+            for (Map.Entry<Integer, ObjectInfo> entry : replaceList.entrySet()) {
+                if(isReturnList) {
+                    ObjectInfo oi= entry.getValue();
+                    oi.type="List<"+oi.type+">";
+
+                }
+                e.output.fields.set(entry.getKey(), entry.getValue());
+            }
+        }
+
 
         if (returnDoc != null) {
             // 类型 解释 例子
@@ -425,7 +445,7 @@ public class SpringParser {
             }
         }
 
-        String group_path = group_base_path + summary.group();
+        String group_path = group_base_path + docAnnotation.group();
         Group apiGroup = document.findGroup(group_path);
         apiGroup.entries.add(e);
 

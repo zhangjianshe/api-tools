@@ -90,8 +90,16 @@ public @interface Doc {
 
     /**
      * 如果函数返回值是一个泛型函数，这里的类型数组第一个表示泛型的具体类型
+     *
      * @return ClassList
      */
     Class[] retClazz() default {};
+
+    /**
+     * 返回值是否是一个列表,因为Java编译器在编译后抹去了相关的信息，必须认为来设定这些值
+     *
+     * @return
+     */
+    boolean[] isReturnList() default {};
 
 }
