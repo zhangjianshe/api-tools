@@ -12,6 +12,7 @@ import org.nutz.lang.Files;
 import org.nutz.lang.Lang;
 import org.nutz.lang.Mirror;
 import org.nutz.lang.Strings;
+import org.nutz.lang.born.BorningException;
 import org.nutz.log.Logs;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -106,7 +107,7 @@ public class SpringParser {
                 }
             }
         }
-
+        log.info("scan package:" + Json.toJson(packageList));
         ArrayList<Class<?>> clzs = new ArrayList<Class<?>>();
         for (String pk : packageList) {
             Set<Class<?>> clz = scanPackage(pk);
@@ -131,8 +132,21 @@ public class SpringParser {
         }
         doc.copyright = doc.copyright + "-[" + Version.VERSION + "@" + Version.TIMESTAMP + "]";
 
+        boolean hasRestController = false;
+        try {
+            Class.forName("org.springframework.web.bind.annotation.RestController");
+            hasRestController = true;
+        } catch (ClassNotFoundException e) {
+            log.warn("doc-api is running in a container which does not support SPRING Rest Controller");
+            hasRestController = false;
+        }
+
         for (Class<?> clz : clzs) {
-            if (clz.getAnnotation(Controller.class) != null || clz.getAnnotation(RestController.class) != null) {
+            boolean isParseRestController =
+                    hasRestController ?
+                            (clz.getAnnotation(RestController.class) != null)
+                            : false;
+            if (clz.getAnnotation(Controller.class) != null || isParseRestController) {
                 parseClass(doc, clz);
             }
 
@@ -275,8 +289,8 @@ public class SpringParser {
     private Entry handleMethod(Class<?> clsType, ApiDoc document, String group_base_path, Method m)
             throws IllegalArgumentException, IllegalAccessException, InstantiationException {
         // 如果没有添加注解 就不输出这个接口的文档
-        Doc summary = m.getAnnotation(Doc.class);
-        if (null == summary) {
+        Doc docAnnotation = m.getAnnotation(Doc.class);
+        if (null == docAnnotation) {
             return null;
         }
         Entry e = new Entry();
@@ -314,24 +328,27 @@ public class SpringParser {
         e.methodName = m.getName();
 
         Class retClz = null;
+        boolean isReturnList = false;
 
-
-        if (summary != null) {
-            e.title = summary.value();
-            e.summary = summary.desc() == null ? "" : summary.desc();
-            e.summary += parseRef(clsType, summary.refs());
-            e.order = summary.order();
-            e.author = summary.author();
-            e.state = transState(summary.state());
-            e.apiStyle = transApiStyle(summary.style());
+        if (docAnnotation != null) {
+            e.title = docAnnotation.value();
+            e.summary = docAnnotation.desc() == null ? "" : docAnnotation.desc();
+            e.summary += parseRef(clsType, docAnnotation.refs());
+            e.order = docAnnotation.order();
+            e.author = docAnnotation.author();
+            e.state = transState(docAnnotation.state());
+            e.apiStyle = transApiStyle(docAnnotation.style());
             // 处理方法的标签.
-            if (summary.tags() != null) {
-                for (String tag : summary.tags()) {
+            if (docAnnotation.tags() != null) {
+                for (String tag : docAnnotation.tags()) {
                     e.tags.add(tag);
                 }
             }
-            if (summary.retClazz() != null && summary.retClazz().length > 0) {
-                retClz = summary.retClazz()[0];
+            if (docAnnotation.retClazz() != null && docAnnotation.retClazz().length > 0) {
+                retClz = docAnnotation.retClazz()[0];
+            }
+            if (docAnnotation.isReturnList() != null && docAnnotation.isReturnList().length > 0) {
+                isReturnList = docAnnotation.isReturnList()[0];
             }
         }
 
@@ -339,9 +356,6 @@ public class SpringParser {
 
         Class<?> out = (Class<?>) m.getReturnType();
 
-        if (retClz != null) {
-            out = retClz;
-        }
 
         int i = 0;
         for (Class<?> clz : ps) {
@@ -389,8 +403,12 @@ public class SpringParser {
                     }
                 }
 
-                ObjectInfo p = handleParameter(clz, name);
-
+                ObjectInfo p = null;
+                try {
+                    p = handleParameter(clz, name);
+                } catch (Exception exc) {
+                    log.warn("handle exception " + exc.toString());
+                }
                 if (p == null) {
                     continue;
                 }
@@ -430,7 +448,7 @@ public class SpringParser {
                 } else if (queryVariable != null) {
                     p.name = queryVariable.value();
                     e.queryParas.add(p);
-                } else if (isRequestBody != null) {
+                } else if (isRequestBody != null || paraDoc != null) {
 
                     e.input.add(p);
                 }
@@ -442,7 +460,28 @@ public class SpringParser {
         // 处理返回值注解
         ApiField returnDoc = m.getAnnotation(ApiField.class);
 
+
         e.output = handleParameter(out, "out");
+        if (retClz != null) {//返回值是一个模板类
+            Map<Integer, ObjectInfo> replaceList = new HashMap<>();
+            for (int j = 0; j < e.output.fields.size(); j++) {
+                ObjectInfo f = e.output.fields.get(j);
+                if (f.type.equals("Object")) {
+                    ObjectInfo replaceObjectInfo = handleParameter(retClz, f.name);
+                    replaceList.put(j, replaceObjectInfo);
+                }
+            }
+            for (Map.Entry<Integer, ObjectInfo> entry : replaceList.entrySet()) {
+                if(isReturnList) {
+                    ObjectInfo oi= entry.getValue();
+                    oi.type="List<"+oi.type+">";
+
+                }
+                e.output.fields.set(entry.getKey(), entry.getValue());
+            }
+        }
+
+
         if (returnDoc != null) {
             // 类型 解释 例子
             if (returnDoc.example() != null && returnDoc.example().length() > 0) {
@@ -450,11 +489,35 @@ public class SpringParser {
             }
         }
 
-        String group_path = group_base_path + summary.group();
+        String group_path = group_base_path + docAnnotation.group();
         Group apiGroup = document.findGroup(group_path);
         apiGroup.entries.add(e);
 
         return e;
+    }
+
+    /**
+     * 将枚举值输出到文档中
+     *
+     * @param fi
+     * @param enums
+     * @return
+     */
+    private void parseCodes(ObjectInfo fi, Class<?>[] enums) {
+        //只处理枚举类型值
+        if (enums == null) {
+            return;
+        }
+        for (Class<?> clz : enums) {
+            if (clz.isEnum()) {
+                Object[] enumConstants = clz.getEnumConstants();
+                StringBuilder sb = new StringBuilder();
+
+                for (Object obj : enumConstants) {
+                    fi.codes.add(new FieldCode("", obj.toString()));
+                }
+            }
+        }
     }
 
     /**
@@ -618,6 +681,9 @@ public class SpringParser {
      */
     private ObjectInfo handleField(Object instance, Field f)
             throws IllegalArgumentException, IllegalAccessException, InstantiationException {
+        if (instance == null) {
+            return null;
+        }
         deeps.incLevel();
 
 
@@ -640,6 +706,8 @@ public class SpringParser {
                     fi.codes.add(fc);
                 }
             }
+            //处理引用枚举值
+            parseCodes(fi, wf.codes());
 
             // 处理字段约束
             Size stringConstrain = null;
@@ -705,8 +773,9 @@ public class SpringParser {
                 } else {
                     c = (Class<?>) type;
                 }
-
-                f.set(instance, list);
+                if (instance != null) {
+                    f.set(instance, list);
+                }
                 fi.type = new StringBuilder().append("List<").append(type.getTypeName()).append(">").toString();
 
                 if (isMap(type.getClass())) {
@@ -720,8 +789,11 @@ public class SpringParser {
                     tackleListObject(fi, list, c);
                 }
             } else if (isGeneric(f.getType())) {
-                tackleGenericType(instance, f, fi);
-
+                if (instance != null) {
+                    tackleGenericType(instance, f, fi);
+                }
+            } else if (f.getType().isInterface()) {
+                //这是一个接口 不做处理
             } else {
                 // 该字段是一个对象类，循环处理此类
                 int count = deeps.getPreLevelCount(f.getType().getName(), deeps.getLevel());
@@ -730,8 +802,9 @@ public class SpringParser {
                     deeps.decLevel();
                     return null;
                 }
-
-                tackleObject(instance, f, fi);
+                if (instance != null) {
+                    tackleObject(instance, f, fi);
+                }
             }
 
             deeps.decLevel();
@@ -801,13 +874,12 @@ public class SpringParser {
             log.info(e.getMessage());
         }
 
-        if (cinstance == null) {
-            return;
-        }
-        // 读取List数组中对象的Doc注解
-        Doc fdoc = cinstance.getClass().getAnnotation(Doc.class);
-        if (fdoc != null) {
-            fi.summary = fdoc.desc();
+        if (cinstance != null) {
+            // 读取List数组中对象的Doc注解
+            Doc fdoc = cinstance.getClass().getAnnotation(Doc.class);
+            if (fdoc != null) {
+                fi.summary = fdoc.desc();
+            }
         }
 
         for (Field f1 : getAllFields(f.getType())) {
@@ -896,6 +968,7 @@ public class SpringParser {
      */
     private void tackleListObject(ObjectInfo fi, ArrayList list, Class<?> c)
             throws IllegalAccessException, InstantiationException {
+
 
         Object cinstance = null;
         try {
@@ -988,14 +1061,14 @@ public class SpringParser {
         } else if (m.isLong()) {
             return new Long(0l);
         } else {
-            Object o = null;
+            Object obj = null;
             try {
-                o = m.born();
-                return o;
-            } catch (Exception e) {
-                log.info(e.getMessage());
+                obj = m.born();
+            } catch (BorningException e) {
+                log.warn("cnnot initialize object " + e.getMessage());
+                obj = null;
             }
-            return null;
+            return obj;
         }
     }
 

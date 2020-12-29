@@ -77,7 +77,7 @@ public class ObjTable extends Para {
 
 
         // 处理返回值\String msg="代码-------说明<br/>";
-        String msg = o.summary + "<br/>";
+        String msg = o.title + "<br/>" + (o.summary == null ? "" : (o.summary + "<br/>"));
         if (o.codes.size() > 0) {
             msg += "代码-------说明<br/>";
             for (FieldCode fc : o.codes) {

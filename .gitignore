@@ -134,3 +134,4 @@ hs_err_pid*
 **/target
 *.cache.js
 *.devmode.js
+*.nocache.js

@@ -65,4 +65,11 @@ public @interface ApiField {
      */
     String[] refs() default {};
 
+    /**
+     * 设置引用的枚举值
+     * 该值必须是枚举类型，输出时，返回枚举值的toString()
+     *
+     * @return
+     */
+    Class<?>[] codes() default {};
 }
