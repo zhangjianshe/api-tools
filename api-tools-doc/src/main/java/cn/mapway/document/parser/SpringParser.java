@@ -15,6 +15,7 @@ import org.nutz.lang.Strings;
 import org.nutz.log.Logs;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -60,6 +61,18 @@ public class SpringParser {
 
         ApiDoc doc = p.parse(new GenContext(), "cn.mapway.doc2.test");
         System.out.println(Json.toJson(doc));
+    }
+
+    public static Field[] getAllFields(Class c) {
+
+        List<Field> fieldList = new ArrayList<>();
+        while (c != null) {
+            fieldList.addAll(new ArrayList<>(Arrays.asList(c.getDeclaredFields())));
+            c = c.getSuperclass();
+        }
+        Field[] fields = new Field[fieldList.size()];
+        fieldList.toArray(fields);
+        return fields;
     }
 
     /**
@@ -211,8 +224,39 @@ public class SpringParser {
 
             if (entry != null) {
                 entry.parentClassName = c.getName();
-                entry.relativePath = basepath + entry.relativePath;
-                entry.url = mContext.getBasepath() + entry.relativePath;
+                entry.relativePath = concatUrl(basepath, entry.relativePath);
+                entry.url = concatUrl(mContext.getBasepath(), entry.relativePath);
+            }
+        }
+    }
+
+    /**
+     * 合并两个URL部件 ，确保中间有 /
+     *
+     * @param url1
+     * @param url1
+     * @return
+     */
+    private String concatUrl(String url1, String url2) {
+        if (Strings.isBlank(url1)) {
+            return url2;
+        }
+
+        if (Strings.isBlank(url2)) {
+            return url1;
+        }
+
+        if (url1.endsWith("/")) {
+            if (url2.startsWith("/")) {
+                return url1 + url2.substring(1);
+            } else {
+                return url1 + url2;
+            }
+        } else {
+            if (url2.startsWith("/")) {
+                return url1 + url2;
+            } else {
+                return url1 + "/" + url2;
             }
         }
     }
@@ -534,8 +578,11 @@ public class SpringParser {
         deeps.push(clz.getName(), deeps.getLevel());
         Object instance = null;
 
-        instance = newInstance(clz);
-
+        try {
+            instance = newInstance(clz);
+        } catch (Exception e) {
+            log.info(e.getMessage());
+        }
         StringBuilder ignore = new StringBuilder();
         ignore.append("^(");
         for (Field f : getAllFields(clz)) {
@@ -633,7 +680,11 @@ public class SpringParser {
             deeps.push(f.getType().getName(), deeps.getLevel());
 
             // 处理字段
-            if (isPrimitive(f.getType())) {
+            if (isMultipartFile(f.getType())) {
+                //这个是上传文件对象
+                tacleMultipartFile(instance, f, wf, fi);
+
+            } else if (isPrimitive(f.getType())) {
                 // String Integer Boolean Double
                 tacklePrimitive(instance, f, wf, fi);
             } else if (isList(f)) {
@@ -690,6 +741,23 @@ public class SpringParser {
         return null;
     }
 
+    private void tacleMultipartFile(Object instance, Field f, ApiField wf, ObjectInfo fi) {
+
+    }
+
+    /**
+     * 处理上传文件信息
+     *
+     * @param type
+     * @return
+     */
+    private boolean isMultipartFile(Class<?> type) {
+        if (type.getName().endsWith(MultipartFile.class.getSimpleName())) {
+            return true;
+        }
+        return false;
+    }
+
     /**
      * @param instance
      * @param f
@@ -724,9 +792,18 @@ public class SpringParser {
             throws IllegalAccessException, InstantiationException {
         Object cinstance = null;
 
-        cinstance = newInstance(f.getType());
-        f.set(instance, cinstance);
+        try {
+            cinstance = newInstance(f.getType());
+            if (instance != null && cinstance != null) {
+                f.set(instance, cinstance);
+            }
+        } catch (Exception e) {
+            log.info(e.getMessage());
+        }
 
+        if (cinstance == null) {
+            return;
+        }
         // 读取List数组中对象的Doc注解
         Doc fdoc = cinstance.getClass().getAnnotation(Doc.class);
         if (fdoc != null) {
@@ -739,18 +816,6 @@ public class SpringParser {
                 fi.fields.add(o);
             }
         }
-    }
-
-    public static Field[] getAllFields(Class c) {
-
-        List<Field> fieldList = new ArrayList<>();
-        while (c != null) {
-            fieldList.addAll(new ArrayList<>(Arrays.asList(c.getDeclaredFields())));
-            c = c.getSuperclass();
-        }
-        Field[] fields = new Field[fieldList.size()];
-        fieldList.toArray(fields);
-        return fields;
     }
 
     /**
@@ -832,7 +897,12 @@ public class SpringParser {
     private void tackleListObject(ObjectInfo fi, ArrayList list, Class<?> c)
             throws IllegalAccessException, InstantiationException {
 
-        Object cinstance = newInstance(c);
+        Object cinstance = null;
+        try {
+            cinstance = newInstance(c);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         // 处理 DOc fi.summary;
 
         // 读取List数组中对象的Doc注解
@@ -896,7 +966,7 @@ public class SpringParser {
      * @param c the c
      * @return the object
      */
-    private Object newInstance(Class<?> c) {
+    private Object newInstance(Class<?> c) throws Exception {
 
         Mirror<?> m = Mirror.me(c);
         if (m.isArray()) {
@@ -917,8 +987,16 @@ public class SpringParser {
             return b;
         } else if (m.isLong()) {
             return new Long(0l);
-        } else
-            return m.born();
+        } else {
+            Object o = null;
+            try {
+                o = m.born();
+                return o;
+            } catch (Exception e) {
+                log.info(e.getMessage());
+            }
+            return null;
+        }
     }
 
     /**
