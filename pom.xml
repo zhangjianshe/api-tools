@@ -6,15 +6,15 @@
     <groupId>cn.mapway</groupId>
     <artifactId>api-tools</artifactId>
     <packaging>pom</packaging>
-    <version>3.18.0</version>
+    <version>3.19.0</version>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
         <java.version>1.8</java.version>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <gpg.keyname>1F8B2CB0A3E469D2</gpg.keyname>
-        <!--        <gpg.keyname>8F43F628BFCC2B9A</gpg.keyname>-->
+<!--        <gpg.keyname>1F8B2CB0A3E469D2</gpg.keyname>-->
+                <gpg.keyname>8F43F628BFCC2B9A</gpg.keyname>
     </properties>
     <name>api-tools</name>
     <description>auto gen doc from api with ui</description>
@@ -42,26 +42,17 @@
     </modules>
     <build>
         <plugins>
-
         </plugins>
     </build>
     <profiles>
         <profile>
-            <id>to-ziroom</id>
+            <id>release</id>
             <distributionManagement>
-                <snapshotRepository>
-                    <id>ziroom</id>
-                    <url>http://mvn.ziroom.com/smarthome_snapshot</url>
-                </snapshotRepository>
                 <repository>
-                    <id>ziroom</id>
-                    <url>http://mvn.ziroom.com/smarthome_release</url>
+                    <id>sonatype_oss</id>
+                    <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
                 </repository>
             </distributionManagement>
-        </profile>
-
-        <profile>
-            <id>release</id>
             <build>
                 <plugins>
                     <plugin>
@@ -73,7 +64,6 @@
                             <serverId>sonatype_oss</serverId>
                             <nexusUrl>https://oss.sonatype.org/</nexusUrl>
                         </configuration>
-
                     </plugin>
                     <plugin>
                         <artifactId>maven-deploy-plugin</artifactId>
@@ -92,7 +82,6 @@
                             </execution>
                         </executions>
                     </plugin>
-
                     <plugin>
                         <artifactId>maven-javadoc-plugin</artifactId>
                         <executions>
@@ -126,5 +115,4 @@
             </build>
         </profile>
     </profiles>
-
 </project>

@@ -11,6 +11,6 @@ if not defined version (
 
 
 :build
-mvn versions:set -DnewVersion=%version% && mvn versions:commit && mvn  clean  deploy  -P%pro%
+mvn versions:set -DnewVersion=%version% && mvn clean package gpg:sign org.sonatype.plugins:nexus-staging-maven-plugin:deploy   -P%pro%
 
 :exit
