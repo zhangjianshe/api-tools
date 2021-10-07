@@ -272,6 +272,7 @@ public class MapwayDocServlet extends HttpServlet {
 
 
         try {
+            response.setContentType("text/html");
             response.setCharacterEncoding("UTF-8");
             Streams.writeAndClose(response.getWriter(), Streams.utf8r(Streams.fileIn(htmlFile)));
 
