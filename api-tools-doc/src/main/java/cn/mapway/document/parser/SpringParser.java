@@ -774,7 +774,8 @@ public class SpringParser {
                     c = (Class<?>) type;
                 }
                 if (instance != null) {
-                    f.set(instance, list);
+                    Mirror.me(instance).setValue(instance,f,list);
+                   // f.set(instance, list);
                 }
                 fi.type = new StringBuilder().append("List<").append(type.getTypeName()).append(">").toString();
 
@@ -868,7 +869,8 @@ public class SpringParser {
         try {
             cinstance = newInstance(f.getType());
             if (instance != null && cinstance != null) {
-                f.set(instance, cinstance);
+                Mirror.me(instance).setValue(instance,f,cinstance);
+               // f.set(instance, cinstance);
             }
         } catch (Exception e) {
             log.info(e.getMessage());
@@ -902,7 +904,8 @@ public class SpringParser {
         // 是一个泛型类 处理特殊的注解
         fi.type = "Object";
         fillObjectInfoWithField(f, fi);
-        f.set(instance, new Object());
+        Mirror.me(instance).setValue(instance,f,new Object());
+//        f.set(instance, new Object());
     }
 
     private void fillObjectInfoWithField(Field f, ObjectInfo fi) throws IllegalAccessException, InstantiationException {
