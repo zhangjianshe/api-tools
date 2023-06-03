@@ -51,45 +51,46 @@
 
         .link {
             color: skyblue;
-        }</ui:style>
+            cursor: pointer;
+        }
+
+        .link:hover {
+            text-decoration: underline;
+        }
+    </ui:style>
     <g:DockLayoutPanel ui:field="root">
         <g:north size="70">
-
             <g:HorizontalPanel styleName="{style.top}" ui:field="topBar"
                                verticalAlignment="middle" width="100%">
                 <g:cell>
                     <g:HorizontalPanel height="70px"
                                        verticalAlignment="middle">
-                        <g:Image ui:field="logo" height="45px"
-                                 styleName="{style.logo}"></g:Image>
+                        <g:Image ui:field="logo" height="45px" styleName="{style.logo}"/>
                         <g:VerticalPanel>
-
-                            <g:Label text="接口文档" ui:field="lbTitle" styleName="{style.title}"></g:Label>
-                            <g:Label ui:field="lbSubtitle" styleName="{style.subtitle}"></g:Label>
+                            <g:Label text="接口文档" ui:field="lbTitle" styleName="{style.title}"/>
+                            <g:Label ui:field="lbSubtitle" styleName="{style.subtitle}"/>
                         </g:VerticalPanel>
                     </g:HorizontalPanel>
                 </g:cell>
                 <g:cell horizontalAlignment="right">
                     <g:HorizontalPanel ui:field="tools"
                                        verticalAlignment="middle" spacing="5">
+                        <g:Anchor ui:field="classDiagram" styleName="{style.link}">类图</g:Anchor>
                         <g:Anchor ui:field="linkSinglePage" styleName="{style.link}" target="single_page">单页文档
                         </g:Anchor>
-                        <g:Image width="30px" height="30px" ui:field="avatar" visible="false"></g:Image>
+                        <g:Image width="30px" height="30px" ui:field="avatar" visible="false"/>
                         <g:Label ui:field="btnLogin" visible="false" styleName="{style.login}">登录Github账号</g:Label>
-                        <g:Label ui:field="apiVersion" visible="false" styleName="{style.version}"></g:Label>
+                        <g:Label ui:field="apiVersion" visible="false" styleName="{style.version}"/>
                     </g:HorizontalPanel>
                 </g:cell>
             </g:HorizontalPanel>
-
-
         </g:north>
         <g:south size="45">
             <g:HorizontalPanel height="45px" styleName="{style.bottom}"
                                width="100%" verticalAlignment="middle" spacing="5">
-                <g:HTML ui:field="lbCopy"></g:HTML>
+                <g:HTML ui:field="lbCopy"/>
                 <g:cell horizontalAlignment="right">
-
-                    <g:Anchor ui:field="anchorDomain"></g:Anchor>
+                    <g:Anchor ui:field="anchorDomain"/>
                 </g:cell>
             </g:HorizontalPanel>
         </g:south>
@@ -97,14 +98,13 @@
             <g:SplitLayoutPanel>
                 <g:west size="350">
                     <g:ScrollPanel styleName="{style.left}">
-                        <m:ApiTree ui:field="apiTree"></m:ApiTree>
+                        <m:ApiTree ui:field="apiTree"/>
                     </g:ScrollPanel>
                 </g:west>
                 <g:center>
-                    <g:ScrollPanel ui:field="content" styleName="{style.content}"></g:ScrollPanel>
+                    <g:ScrollPanel ui:field="content" styleName="{style.content}"/>
                 </g:center>
             </g:SplitLayoutPanel>
         </g:center>
-
     </g:DockLayoutPanel>
 </ui:UiBinder> 

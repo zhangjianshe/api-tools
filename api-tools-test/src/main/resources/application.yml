@@ -1,5 +1,18 @@
 
-
+spring:
+        web:
+                resources:
+                        static-locations: file:src/main/resources/static/
+        application:
+                name: mapway-doc-test
+        freemarker:
+                charset: UTF-8
+                suffix: .ftl
+                content-type: text/html; charset=utf-8
+                template-loader-path: classpath:/template/
+                request-context-attribute: req
+                cache: false
+                enabled: true
 mapway:
     apidoc:
             enabled: true #开启或者关闭文档

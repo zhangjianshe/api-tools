@@ -25,8 +25,8 @@ public class ApiDocEntry implements EntryPoint {
 
         MainFrame frame = new MainFrame();
         RootLayoutPanel.get().add(frame);
-        GWT.log("base " + GWT.getModuleBaseURL() + "../doc/data");
-        String target = GWT.getModuleBaseURL() + "../doc/data";
+        GWT.log("base " + GWT.getHostPageBaseURL() + "/doc/data");
+        String target = GWT.getHostPageBaseURL() + "/doc/data";
         frame.init(target);
     }
 

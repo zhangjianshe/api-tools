@@ -30,11 +30,11 @@ public class ApiTree extends Tree {
      * The css.
      */
     CssStyle css;
-
+    ApiDoc apiDoc;
     /**
      * The open handler.
      */
-    private OpenHandler<TreeItem> openHandler = new OpenHandler<TreeItem>() {
+    private final OpenHandler<TreeItem> openHandler = new OpenHandler<TreeItem>() {
 
         @Override
         public void onOpen(OpenEvent<TreeItem> event) {
@@ -42,11 +42,10 @@ public class ApiTree extends Tree {
             setOpen(g.fullName(), true);
         }
     };
-
     /**
      * The close handler.
      */
-    private CloseHandler<TreeItem> closeHandler = new CloseHandler<TreeItem>() {
+    private final CloseHandler<TreeItem> closeHandler = new CloseHandler<TreeItem>() {
 
         @Override
         public void onClose(CloseEvent<TreeItem> event) {
@@ -67,6 +66,29 @@ public class ApiTree extends Tree {
     }
 
     /**
+     * 构建TAG标签 .
+     *
+     * @param tags the tags
+     * @return string
+     */
+    public static String buildTags(String[] tags) {
+        if (tags == null) {
+            return "";
+        }
+        String html = "";
+        String style = SysResource.INSTANCE.getCss().tag();
+        for (String tag : tags) {
+            String[] kv = tag.split("/");
+            if (kv.length == 2) {
+                style = kv[1];
+                tag = kv[0];
+            }
+            html += "<span class='" + style + "'>" + tag + "</span>";
+        }
+        return html;
+    }
+
+    /**
      * Checks if is open.
      *
      * @param key the key
@@ -74,10 +96,7 @@ public class ApiTree extends Tree {
      */
     public boolean isOpen(String key) {
         String data = LocalStorage.val(key);
-        if ("1".equals(data)) {
-            return true;
-        }
-        return false;
+        return "1".equals(data);
     }
 
     /**
@@ -97,10 +116,14 @@ public class ApiTree extends Tree {
      */
     public void parseData(ApiDoc data) {
         this.clear();
-
+        this.apiDoc = data;
         Group group = data.root();
         //不显示最顶级的节点
         parseGroup(null, group, data);
+    }
+
+    public ApiDoc getApiDoc() {
+        return apiDoc;
     }
 
     /**
@@ -189,29 +212,6 @@ public class ApiTree extends Tree {
             }
         }
         return null;
-    }
-
-    /**
-     * 构建TAG标签 .
-     *
-     * @param tags the tags
-     * @return string
-     */
-    public static String buildTags(String[] tags) {
-        if (tags == null) {
-            return "";
-        }
-        String html = "";
-        String style = SysResource.INSTANCE.getCss().tag();
-        for (String tag : tags) {
-            String[] kv = tag.split("/");
-            if (kv.length == 2) {
-                style = kv[1];
-                tag = kv[0];
-            }
-            html += "<span class='" + style + "'>" + tag + "</span>";
-        }
-        return html;
     }
 
     /**

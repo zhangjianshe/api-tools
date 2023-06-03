@@ -31,28 +31,65 @@ public class MainFrame extends Composite {
     /**
      * The ui binder.
      */
-    private static MainFrameUiBinder uiBinder = GWT.create(MainFrameUiBinder.class);
-
+    private static final MainFrameUiBinder uiBinder = GWT.create(MainFrameUiBinder.class);
     /**
-     * The Interface MainFrameUiBinder.
+     * The download link handler.
      */
-    interface MainFrameUiBinder extends UiBinder<Widget, MainFrame> {
-    }
+    private final ClickHandler downloadLinkHandler = new ClickHandler() {
 
+        @Override
+        public void onClick(ClickEvent event) {
+            CustomButton btn = (CustomButton) event.getSource();
+            JarInfo jar = (JarInfo) btn.getData();
+            Window.open(jar.link(), "Connecgtor 下载", "");
+        }
+    };
     /**
      * The current item.
      */
     TreeItem currentItem = null;
-
     /**
      * The entry panel.
      */
     EntryPanel entryPanel;
+    /**
+     * The list.
+     */
+    EntryListPanel list;
+    ClassDiagramPanel classDiagramPanel;
+    /**
+     * The doc.
+     */
+    ApiDoc doc;
+    /**
+     * The goto word handler.
+     */
+    private final ClickHandler gotoWordHandler = new ClickHandler() {
 
+        @Override
+        public void onClick(ClickEvent event) {
+            Window.open(doc.wordUrl(), "wordExport", "");
+        }
+    };
+    /**
+     * The Api version.
+     */
+    @UiField
+    Label apiVersion;
+    /**
+     * The api tree.
+     */
+    @UiField
+    ApiTree apiTree;
+    /**
+     * The content.
+     */
+    @UiField
+    ScrollPanel content;
     /**
      * The tree select.
      */
-    private SelectionHandler<TreeItem> treeSelect = new SelectionHandler<TreeItem>() {
+    private final SelectionHandler<TreeItem> treeSelect = new SelectionHandler<TreeItem>() {
 
         @Override
         public void onSelection(SelectionEvent<TreeItem> arg0) {
@@ -68,6 +105,66 @@ public class MainFrame extends Composite {
         }
 
     };
+    /**
+     * The lb title.
+     */
+    @UiField
+    Label lbTitle;
+    /**
+     * The logo.
+     */
+    @UiField
+    Image logo;
+    /**
+     * The tools.
+     */
+    @UiField
+    HorizontalPanel tools;
+    /**
+     * sub title.
+     */
+    @UiField
+    Label lbSubtitle;
+    /**
+     * sub title.
+     */
+    @UiField
+    HTML lbCopy;
+    /**
+     * sub title.
+     */
+    @UiField
+    Anchor anchorDomain;
+    /**
+     * The Top bar.
+     */
+    @UiField
+    HorizontalPanel topBar;
+    /**
+     * The Root.
+     */
+    @UiField
+    DockLayoutPanel root;
+    @UiField
+    Image avatar;
+    @UiField
+    Label btnLogin;
+    @UiField
+    Anchor linkSinglePage;
+    @UiField
+    Anchor classDiagram;
+
+    /**
+     * Instantiates a new main frame.
+     */
+    public MainFrame() {
+        initWidget(uiBinder.createAndBindUi(this));
+        logo.setUrl(SysResource.INSTANCE.logo().getSafeUri());
+
+        apiTree.addSelectionHandler(treeSelect);
+
+        adjustUI();
+    }
 
     /**
      * Handle item.
@@ -105,11 +202,6 @@ public class MainFrame extends Composite {
     }
 
     /**
-     * The list.
-     */
-    EntryListPanel list;
-
-    /**
      * Show entry list.
      *
      * @param group the group
@@ -126,17 +218,15 @@ public class MainFrame extends Composite {
         content.scrollToTop();
     }
 
+    private void showClassDiagram(ApiDoc apiDoc) {
+        if (classDiagramPanel == null) {
+            classDiagramPanel = new ClassDiagramPanel();
+        }
 
-    /**
-     * Instantiates a new main frame.
-     */
-    public MainFrame() {
-        initWidget(uiBinder.createAndBindUi(this));
-        logo.setUrl(SysResource.INSTANCE.logo().getSafeUri());
-
-        apiTree.addSelectionHandler(treeSelect);
-
-        adjustUI();
+        content.clear();
+        content.add(classDiagramPanel);
+        classDiagramPanel.setData(apiDoc);
+        content.scrollToTop();
     }
 
     /**
@@ -151,35 +241,6 @@ public class MainFrame extends Composite {
             root.setWidgetHidden(topBar, true);
         }
     }
-
-    /**
-     * The doc.
-     */
-    ApiDoc doc;
-
-    /**
-     * The goto word handler.
-     */
-    private ClickHandler gotoWordHandler = new ClickHandler() {
-
-        @Override
-        public void onClick(ClickEvent event) {
-            Window.open(doc.wordUrl(), "wordExport", "");
-        }
-    };
-
-    /**
-     * The download link handler.
-     */
-    private ClickHandler downloadLinkHandler = new ClickHandler() {
-
-        @Override
-        public void onClick(ClickEvent event) {
-            CustomButton btn = (CustomButton) event.getSource();
-            JarInfo jar = (JarInfo) btn.getData();
-            Window.open(jar.link(), "Connecgtor 下载", "");
-        }
-    };
 
     /**
      * 获取模板文件中的数据.
@@ -316,77 +377,16 @@ public class MainFrame extends Composite {
         }
     }
 
+    @UiHandler("classDiagram")
+    public void classDiagramClick(ClickEvent event) {
+        //显示类图
+        showClassDiagram(apiTree.getApiDoc());
+    }
 
     /**
-     * The Api version.
+     * The Interface MainFrameUiBinder.
      */
-    @UiField
-    Label apiVersion;
-
-    /**
-     * The api tree.
-     */
-    @UiField
-    ApiTree apiTree;
-
-    /**
-     * The content.
-     */
-    @UiField
-    ScrollPanel content;
-
-    /**
-     * The lb title.
-     */
-    @UiField
-    Label lbTitle;
-
-    /**
-     * The logo.
-     */
-    @UiField
-    Image logo;
-
-    /**
-     * The tools.
-     */
-    @UiField
-    HorizontalPanel tools;
-
-    /**
-     * sub title.
-     */
-    @UiField
-    Label lbSubtitle;
-
-    /**
-     * sub title.
-     */
-    @UiField
-    HTML lbCopy;
-
-    /**
-     * sub title.
-     */
-    @UiField
-    Anchor anchorDomain;
-
-    /**
-     * The Top bar.
-     */
-    @UiField
-    HorizontalPanel topBar;
-
-    /**
-     * The Root.
-     */
-    @UiField
-    DockLayoutPanel root;
-    @UiField
-    Image avatar;
-    @UiField
-    Label btnLogin;
-    @UiField
-    Anchor linkSinglePage;
+    interface MainFrameUiBinder extends UiBinder<Widget, MainFrame> {
+    }
 
 }

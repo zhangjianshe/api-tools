@@ -1,4 +1,13 @@
 @CHARSET "UTF-8";
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    overflow: hidden;
+}
 
 input, button, select, textarea {
     outline: none
@@ -475,4 +484,35 @@ textarea {
     pre {
         word-wrap: break-word;
     }
+}
+
+
+/*定义滚动条高宽及背景
+ 高宽分别对应横竖滚动条的尺寸*/
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+    background-color: #fff;
+    cursor: default;
+}
+
+/*定义滚动条轨道
+ 内阴影+圆角*/
+::-webkit-scrollbar-track {
+    background-color: #fff;
+    cursor: default;
+}
+
+/*定义滑块
+ 内阴影+圆角*/
+::-webkit-scrollbar-thumb {
+    background-color: #e0e0e0;
+    cursor: default;
+}
+
+/*定义滑块
+ 内阴影+圆角*/
+::-webkit-scrollbar-thumb:HOVER {
+    background-color: #b0b0b0;
+    cursor: default;
 }

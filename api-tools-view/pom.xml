@@ -82,6 +82,27 @@
                                     <directory>${project.build.directory}/${project.build.finalName}/docui</directory>
                                     <includes>
                                         <include>*.js</include>
+                                        <include>*.gif</include>
+                                    </includes>
+                                    <filtering>false</filtering>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>copy-resources-test</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.parent.basedir}/api-tools-test/src/main/resources/static/js/doc</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${project.build.directory}/${project.build.finalName}/docui</directory>
+                                    <includes>
+                                        <include>*.js</include>
+                                        <include>*.gif</include>
                                     </includes>
                                     <filtering>false</filtering>
                                 </resource>
