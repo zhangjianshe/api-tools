@@ -116,6 +116,7 @@ echo "  -> Updating $SUB_POM"
 execute sed -i.bak "/<parent>/,/<\\/parent>/ { s|<version>.*</version>|<version>${NEW_VERSION}</version>|; t; }" "$SUB_POM"
 execute rm -f "${SUB_POM}.bak"
 
+execute rm -f "pom.xml.bak"
 # 7. Commit the version change
 COMMIT_MSG="Release: bump version to ${NEW_VERSION}"
 execute git add "$POM_FILE"
