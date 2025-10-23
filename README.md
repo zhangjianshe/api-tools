@@ -43,7 +43,7 @@ build.bat 3.0.6 release 或者 build.sh 3.0.6 release
 <dependency>
     <groupId>cn.mapway</groupId>
     <artifactId>api-tools-doc</artifactId>
-    <version>3.20.18</version>
+    <version>3.20.19</version>
 </dependency>
 ```
 - 配置属性
