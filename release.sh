@@ -98,7 +98,7 @@ execute sed -i.bak "0,/<version>.*<\/version>/s/<version>.*<\/version>/<version>
 execute rm -f "${POM_FILE}.bak"
 
 # NEW STEP: Update the version in sub-module pom.xml files
-SUB_MODULE_POMS=("api-tools-view/pom.xml" "api-tools-test/pom.xml" "api-tools-doc/pom.xml")
+SUB_MODULE_POMS=("api-tools-view/pom.xml" "api-tools-test/pom.xml" "api-tools-doc/pom.xml" "README.md")
 
 echo "Synchronizing parent version in sub-module POMs..."
 SUB_POM=api-tools-view/pom.xml
