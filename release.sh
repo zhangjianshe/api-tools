@@ -103,7 +103,7 @@ SUB_MODULE_POMS=("api-tools-view/pom.xml" "api-tools-test/pom.xml" "api-tools-do
 echo "Synchronizing parent version in sub-module POMs..."
 SUB_POM=api-tools-view/pom.xml
 echo "  -> Updating $SUB_POM"
-execute sed -i.bak "0,/<parent>/,/<\\/parent>/ { s|<version>.*</version>|<version>${NEW_VERSION}</version>|; t; }" "$SUB_POM"
+execute sed -i.bak "/<parent>/,/<\\/parent>/ { s|<version>.*</version>|<version>${NEW_VERSION}</version>|; t; }" "$SUB_POM"
 execute rm -f "${SUB_POM}.bak"
 
 SUB_POM=api-tools-test/pom.xml
@@ -113,7 +113,7 @@ execute rm -f "${SUB_POM}.bak"
 
 SUB_POM=api-tools-doc/pom.xml
 echo "  -> Updating $SUB_POM"
-execute sed -i.bak "0,/<parent>/,/<\\/parent>/ { s|<version>.*</version>|<version>${NEW_VERSION}</version>|; t; }" "$SUB_POM"
+execute sed -i.bak "/<parent>/,/<\\/parent>/ { s|<version>.*</version>|<version>${NEW_VERSION}</version>|; t; }" "$SUB_POM"
 execute rm -f "${SUB_POM}.bak"
 
 # 7. Commit the version change
