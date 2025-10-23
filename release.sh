@@ -91,29 +91,35 @@ echo "New Version: $NEW_VERSION"
 TAG="v${NEW_VERSION}"
 echo "New Tag: $TAG"
 
-# 6. Update the version in pom.xml
+# 6. Update the version in pom.xml (Parent)
 echo "Updating $POM_FILE to version $NEW_VERSION..."
-# Use sed to replace the old version with the new one globally in the file.
-# The regex targets the first <version>...</version> block that does NOT contain -SNAPSHOT
-# Note: Using '-i.bak' for cross-platform compatibility with sed
-if $DRY_RUN; then
-    echo "DRY-RUN: sed -i.bak 's|<version>[^<]*</version>|<version>'"${NEW_VERSION}"'</version>|' $POM_FILE"
-else
-    # Find the main <version> tag and replace its content
-    sed -i.bak "0,/<version>.*<\/version>/s/<version>.*<\/version>/<version>${NEW_VERSION}<\/version>/" "$POM_FILE"
+# This targets the main project version (as already in your script)
+execute sed -i.bak "0,/<version>.*<\/version>/s/<version>.*<\/version>/<version>${NEW_VERSION}<\/version>/" "$POM_FILE"
+execute rm -f "${POM_FILE}.bak"
 
-    if [ $? -ne 0 ]; then
-        echo "Error: Failed to modify $POM_FILE." >&2
-        exit 1
+# NEW STEP: Update the version in sub-module pom.xml files
+SUB_MODULE_POMS=("api-tools-view/pom.xml" "api-tools-test/pom.xml" "api-tools-doc/pom.xml")
+
+echo "Synchronizing parent version in sub-module POMs..."
+for SUB_POM in "${SUB_MODULE_POMS[@]}"; do
+    if [ -f "$SUB_POM" ]; then
+        echo "  -> Updating $SUB_POM"
+        # Use sed to target the <parent>...</parent> block's version
+        # Assuming the <parent> version is the first version tag in the sub-module POM
+        execute sed -i.bak "0,/<parent>.*<\/parent>/s|<version>.*</version>|<version>${NEW_VERSION}</version>|" "$SUB_POM"
+        execute rm -f "${SUB_POM}.bak"
+    else
+        echo "  -> Warning: Sub-module POM not found at $SUB_POM" >&2
     fi
-    # Remove the backup file created by sed
-    rm "${POM_FILE}.bak"
-fi
+done
 
 # 7. Commit the version change
 COMMIT_MSG="Release: bump version to ${NEW_VERSION}"
 execute git add "$POM_FILE"
+# Add all sub-module POMs to the commit
+execute git add "${SUB_MODULE_POMS[@]}"
 execute git commit -m "$COMMIT_MSG"
+
 
 # 8. Tag the commit
 echo "Creating tag ${TAG}..."
