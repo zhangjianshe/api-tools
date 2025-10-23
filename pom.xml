@@ -57,12 +57,29 @@
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-javadoc-plugin</artifactId>
                         <version>3.2.0</version>
+                        <configuration>
+                            <additionalDependencies>
+                                <additionalDependency>
+                                    <groupId>cn.mapway</groupId>
+                                    <artifactId>api-tools-doc</artifactId>
+                                    <version>${project.version}</version>
+                                </additionalDependency>
+                            </additionalDependencies>
+
+                            <doclint>none</doclint>
+                            <source>${java.version}</source>
+                            <sourcepath>
+                                ${project.build.directory}/generated-sources/annotations,
+                                ${project.build.directory}/generated-sources/java-templates
+                            </sourcepath>
+                        </configuration>
                         <executions>
                             <execution>
                                 <id>attach-javadocs</id>
                                 <goals>
                                     <goal>jar</goal>
                                 </goals>
+
                             </execution>
                         </executions>
                     </plugin>
