@@ -15,7 +15,7 @@
     <description>test for api-tools-doc</description>
     <properties>
         <java.version>11</java.version>
-        <API_TOOLS_DOC_VERSION>3.20.13</API_TOOLS_DOC_VERSION>
+        <API_TOOLS_DOC_VERSION>3.20.14</API_TOOLS_DOC_VERSION>
     </properties>
     <dependencies>
         <dependency>
