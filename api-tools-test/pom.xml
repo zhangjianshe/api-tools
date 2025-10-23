@@ -15,7 +15,7 @@
     <description>test for api-tools-doc</description>
     <properties>
         <java.version>11</java.version>
-        <API-TOOLS-DOC-VERSION>3.20.3</API-TOOLS-DOC-VERSION>
+        <API_TOOLS_DOC_VERSION>3.20.3</API_TOOLS_DOC_VERSION>
     </properties>
     <dependencies>
         <dependency>
@@ -33,7 +33,7 @@
         <dependency>
             <groupId>cn.mapway</groupId>
             <artifactId>api-tools-doc</artifactId>
-            <version>${API-TOOLS-DOC-VERSION}</version>
+            <version>${API_TOOLS_DOC_VERSION}</version>
             <scope>compile</scope>
         </dependency>
 
