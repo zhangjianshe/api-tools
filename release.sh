@@ -101,17 +101,20 @@ execute rm -f "${POM_FILE}.bak"
 SUB_MODULE_POMS=("api-tools-view/pom.xml" "api-tools-test/pom.xml" "api-tools-doc/pom.xml")
 
 echo "Synchronizing parent version in sub-module POMs..."
-for SUB_POM in "${SUB_MODULE_POMS[@]}"; do
-    if [ -f "$SUB_POM" ]; then
-        echo "  -> Updating $SUB_POM"
-        # Use sed to target the <parent>...</parent> block's version
-        # Assuming the <parent> version is the first version tag in the sub-module POM
-        execute sed -i.bak "0,/<parent>.*<\/parent>/s|<version>.*</version>|<version>${NEW_VERSION}</version>|" "$SUB_POM"
-        execute rm -f "${SUB_POM}.bak"
-    else
-        echo "  -> Warning: Sub-module POM not found at $SUB_POM" >&2
-    fi
-done
+SUB_POM=api-tools-view/pom.xml
+echo "  -> Updating $SUB_POM"
+execute sed -i.bak "0,/<parent>.*<\/parent>/s|<version>.*</version>|<version>${NEW_VERSION}</version>|" "$SUB_POM"
+execute rm -f "${SUB_POM}.bak"
+
+SUB_POM=api-tools-test/pom.xml
+echo "  -> Updating $SUB_POM"
+execute sed -i.bak "0,/<API-TOOLS-DOC-VERSION>.*</API-TOOLS-DOC-VERSION>|<API-TOOLS-DOC-VERSION>${NEW_VERSION}</API-TOOLS-DOC-VERSION>|" "$SUB_POM"
+execute rm -f "${SUB_POM}.bak"
+
+SUB_POM=api-tools-doc/pom.xml
+echo "  -> Updating $SUB_POM"
+execute sed -i.bak "0,/<parent>.*<\/parent>/s|<version>.*</version>|<version>${NEW_VERSION}</version>|" "$SUB_POM"
+execute rm -f "${SUB_POM}.bak"
 
 # 7. Commit the version change
 COMMIT_MSG="Release: bump version to ${NEW_VERSION}"
