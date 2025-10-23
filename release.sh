@@ -121,8 +121,6 @@ echo "  -> Updating $SUB_POM"
 execute sed -i.bak "s|<version>.*</version>|<version>${NEW_VERSION}</version>|" "$SUB_POM"
 execute rm -f "${SUB_POM}.bak"
 
-<version>3.3.0</version>
-
 execute rm -f "pom.xml.bak"
 # 7. Commit the version change
 COMMIT_MSG="Release: bump version to ${NEW_VERSION}"
