@@ -108,7 +108,7 @@ execute rm -f "${SUB_POM}.bak"
 
 SUB_POM=api-tools-test/pom.xml
 echo "  -> Updating $SUB_POM"
-execute sed -i.bak "0,/<properties>.*</properties>|<API-TOOLS-DOC-VERSION>${NEW_VERSION}</API-TOOLS-DOC-VERSION>|" "$SUB_POM"
+execute sed -i.bak "0,/<properties>.*<\/properties>|<API-TOOLS-DOC-VERSION>${NEW_VERSION}</API-TOOLS-DOC-VERSION>|" "$SUB_POM"
 execute rm -f "${SUB_POM}.bak"
 
 SUB_POM=api-tools-doc/pom.xml
