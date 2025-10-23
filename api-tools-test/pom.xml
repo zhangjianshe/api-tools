@@ -5,12 +5,12 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.1.3.RELEASE</version>
+        <version>3.20.3</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>cn.mapway</groupId>
     <artifactId>api-tools-test</artifactId>
-    <version>3.0.0-SNAPSHOT</version>
+    <version>3.20.3</version>
     <name>api-tools-test</name>
     <description>test for api-tools-doc</description>
     <properties>
@@ -32,7 +32,7 @@
         <dependency>
             <groupId>cn.mapway</groupId>
             <artifactId>api-tools-doc</artifactId>
-            <version>3.10.0</version>
+            <version>3.20.3</version>
             <scope>compile</scope>
         </dependency>
 
