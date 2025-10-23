@@ -69,8 +69,7 @@
                             <doclint>none</doclint>
                             <source>${java.version}</source>
                             <sourcepath>
-                                ${project.build.directory}/generated-sources/annotations,
-                                ${project.build.directory}/generated-sources/java-templates
+                                ${project.basedir}/src/main/java:${project.build.directory}/generated-sources/annotations:${project.build.directory}/generated-sources/java-templates
                             </sourcepath>
                         </configuration>
                         <executions>
