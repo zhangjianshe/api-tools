@@ -248,6 +248,7 @@ public class MainFrame extends Composite {
      * @return the api doc
      */
     private final native ApiDoc findDocData()/*-{
+
         if ($wnd.g_data != undefined) {
             return $wnd.g_data;
         }

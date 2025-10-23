@@ -77,6 +77,12 @@
     <title>DOC TEST</title>
 </head>
 <body>
+<script>
+
+</script>
+<script >
+   window.G_DATA_URL="http://localhost:7100/doc/data";
+</script>
 <script type="text/javascript" src="js/ace/ace.js"></script>
 <script type="text/javascript" src="js/doc/docui.nocache.js"></script>
 <iframe src="javascript:''"
