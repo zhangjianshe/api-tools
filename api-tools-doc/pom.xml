@@ -55,7 +55,7 @@
         <dependency>
             <groupId>org.nutz</groupId>
             <artifactId>nutz</artifactId>
-            <version>1.r.66</version>
+            <version>1.r.69.v20220703</version>
         </dependency>
         <dependency>
             <groupId>com.atlassian.commonmark</groupId>
